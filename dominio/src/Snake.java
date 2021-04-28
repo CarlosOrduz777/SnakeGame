@@ -1,7 +1,7 @@
 package src;
 
 
-public class Snake {
+public class Snake implements Elements{
     private boolean left;
     private boolean right;
     private boolean up;

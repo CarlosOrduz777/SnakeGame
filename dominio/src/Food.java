@@ -1,9 +1,9 @@
 package src;
 
-public class Food {
+public abstract class Food implements Elements{
     private int positionX;
     private int positionY;
-    
+
     public void createFood(){
 
     }
