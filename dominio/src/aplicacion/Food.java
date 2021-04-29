@@ -1,6 +1,6 @@
 package aplicacion;
 
-abstract class Food implements Element{
+public abstract class Food implements Element{
     private int x;
     private int y;
     
