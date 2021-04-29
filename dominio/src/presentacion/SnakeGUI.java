@@ -1,29 +1,25 @@
 package presentacion;
 
-import org.w3c.dom.DOMImplementation;
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Random;
+import java.util.Objects;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import aplicacion.*;
 
-public class SnakeGUI extends JFrame implements ActionListener {
+public class SnakeGUI extends JFrame implements ActionListener, KeyListener {
 
     private JMenuBar menuBar;
     private JMenu menu;
-    private JMenuItem nuevo,abrir,salvar,salvarComo,salir,cambiarColor;
+    private JMenuItem nuevo, abrir, salvar, salvarComo, salir, cambiarColor;
     private JLabel fondo;
     private JLabel score;
-    private JLabel moves;
     private JPanel grillaBotones;
     private JButton jugar;
-    private JPanel [][] cuadriculaSnake;
+    private JPanel[][] cuadriculaSnake;
     private JButton scoreBoard;
     private JButton menuPrincipal;
     private JLabel titulo;
@@ -31,18 +27,20 @@ public class SnakeGUI extends JFrame implements ActionListener {
     private JPanel juego;
     private JPanel elementos;
     private JPanel puntajes;
+    private java.util.Timer timer;
 
     private Game game;
 
-    private SnakeGUI() throws InterruptedException {
+    private SnakeGUI(){
+        game = new Game(1, false);
         this.prepareElementos();
         this.prepareAcciones();
     }
 
-    private void prepareElementos() throws InterruptedException {
+    private void prepareElementos() {
         setTitle("SnakeGame");
         Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
-        setSize((int) d.getWidth()/2,(int)d.getHeight()/2);
+        setSize((int) d.getWidth() / 2, (int) d.getHeight() / 2);
         setLocationRelativeTo(null);
 
         prepareElementosMenu();
@@ -50,35 +48,36 @@ public class SnakeGUI extends JFrame implements ActionListener {
         prepareElementosPrincipal();
 
     }
-    private void prepareElementosPrincipal(){
+
+    private void prepareElementosPrincipal() {
 
         fondo = new JLabel();
-        fondo.setIcon(new ImageIcon(getClass().getResource("snake.jpg")));
+        fondo.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("snake.jpg"))));
         fondo.setOpaque(false);
-        Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
-        fondo.setBounds(270,10,200,70);
-        titulo = new JLabel("JEWEL  \n"+"QUEST");
+        fondo.setBounds(270, 10, 200, 70);
+        titulo = new JLabel("JEWEL  \n" + "QUEST");
         principal = new JPanel();
         principal.setLayout(new BorderLayout());
         principal.add(fondo, BorderLayout.CENTER);
-        principal.add(titulo,BorderLayout.NORTH);
+        principal.add(titulo, BorderLayout.NORTH);
         add(principal);
 
         grillaBotones = new JPanel();
         Dimension dimension = new Dimension();
-        dimension.setSize(40,30);
+        dimension.setSize(40, 30);
         grillaBotones.setSize(dimension);
-        grillaBotones.setLayout(new GridLayout(1,1));
-        grillaBotones.setLocation(50,50);
+        grillaBotones.setLayout(new GridLayout(1, 1));
+        grillaBotones.setLocation(50, 50);
         jugar = new JButton("Play");
         Dimension d2 = new Dimension();
-        d2.setSize((int)dimension.getWidth()/20,(int)dimension.getHeight()/20);
+        d2.setSize((int) dimension.getWidth() / 20, (int) dimension.getHeight() / 20);
         jugar.setSize(d2);
         grillaBotones.add(jugar);
 
-        principal.add(grillaBotones,BorderLayout.SOUTH);
+        principal.add(grillaBotones, BorderLayout.SOUTH);
     }
-    private void prepareElementosMenu(){
+
+    private void prepareElementosMenu() {
         menuBar = new JMenuBar();
         setJMenuBar(menuBar);
         menu = new JMenu("Menu");
@@ -96,10 +95,11 @@ public class SnakeGUI extends JFrame implements ActionListener {
         salir = new JMenuItem("Salir");
         menu.add(salir);
     }
-    private void prepareElementosTablero() throws InterruptedException {
+
+    private void prepareElementosTablero(){
         juego = new JPanel();
         elementos = new JPanel();
-        elementos.setLayout(new GridLayout(10,10));
+        elementos.setLayout(new GridLayout(10, 10));
         this.cuadriculaSnake = new JPanel[10][10];
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
@@ -108,25 +108,23 @@ public class SnakeGUI extends JFrame implements ActionListener {
                 elementos.add(cuadrado);
                 cuadriculaSnake[i][j] = cuadrado;
                 cuadrado.setBackground(Color.black);
-
             }
         }
-        game = new Game(1,false);
         menuPrincipal = new JButton("Main menu");
         menuPrincipal.setBackground(Color.orange);
         puntajes = new JPanel();
-        puntajes.setLayout(new GridLayout(1,2));
-        score = new JLabel("Score :"+" "+"0");
+        puntajes.setLayout(new GridLayout(1, 2));
+        score = new JLabel("Score :" + " " + "0");
         puntajes.setBackground(Color.ORANGE);
         puntajes.add(score);
         juego.setLayout(new BorderLayout());
-        juego.add(elementos,BorderLayout.CENTER);
-        juego.add(menuPrincipal,BorderLayout.SOUTH);
-        juego.add(puntajes,BorderLayout.NORTH);
+        juego.add(elementos, BorderLayout.CENTER);
+        juego.add(menuPrincipal, BorderLayout.SOUTH);
+        juego.add(puntajes, BorderLayout.NORTH);
         add(juego);
     }
 
-    private void prepareAcciones(){
+    private void prepareAcciones() {
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent ev) {
@@ -136,50 +134,56 @@ public class SnakeGUI extends JFrame implements ActionListener {
         prepareMenuAcciones();
         prepareMenuPrincipalAcciones();
         prepareJugarAcciones();
+        juego.addKeyListener(this);
     }
-    private void  prepareMenuPrincipalAcciones(){
+
+    private void prepareMenuPrincipalAcciones() {
 
         jugar.addActionListener(this);
-    }
-    private void  prepareJugarAcciones(){
 
-        menuPrincipal.addActionListener(this);
     }
-    private void prepareMenuAcciones(){
+
+    private void prepareJugarAcciones() {
+        menuPrincipal.addActionListener(this);
+
+
+    }
+
+    private void prepareMenuAcciones() {
         salir.addActionListener(this);
         abrir.addActionListener(this);
         salvar.addActionListener(this);
         cambiarColor.addActionListener(this);
+        //arriba
     }
-    public void actionPerformed(ActionEvent e){
-        if(e.getSource() == salir){
+
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == salir) {
             close();
-        }else if(e.getSource() == abrir){
+        } else if (e.getSource() == abrir) {
             abrirAccion();
-        }else if(e.getSource() == salvar){
+        } else if (e.getSource() == salvar) {
             salvarAccion();
-        }
-        else if (e.getSource() == jugar){
+        } else if (e.getSource() == jugar) {
             jugarAccion();
-        }
-        else if (e.getSource() == menuPrincipal) {
+        } else if (e.getSource() == menuPrincipal) {
             menuPrincipalAccion();
-        }
-        else if (e.getSource() == cambiarColor){
+
+        } else if (e.getSource() == cambiarColor) {
             cambiarColorAccion();
         }
     }
-    private  void cambiarColorAccion(){
+
+    private void cambiarColorAccion() {
         JColorChooser sel = new JColorChooser();
         Color color = sel.showDialog(null, "Seleccione un color", Color.BLACK);
         elementos.setBackground(color);
-        /*for (JButton joya: joyas){
-            joya.setBorder(BorderFactory.createMatteBorder(10,30,10,30,color));
-        }
-        */
+
 
     }
-    private void menuPrincipalAccion(){
+
+    private void menuPrincipalAccion() {
+        game = new Game(1,false);
         remove(juego);
         repaint();
         revalidate();
@@ -187,43 +191,110 @@ public class SnakeGUI extends JFrame implements ActionListener {
         repaint();
         revalidate();
     }
-    private void jugarAccion(){
+
+    private void jugarAccion() {
         remove(principal);
         repaint();
         revalidate();
         add(juego);
         repaint();
         revalidate();
+        timer = new Timer();
+        TimerTask turno = new TimerTask() {
+            @Override
+            public void run() {
+                refresque();
+                game.getBoard().turnS();
+                if (!game.getBoard().getStatus()) {
+                    timer.cancel();
+                    timer.purge();
+                    JOptionPane.showMessageDialog(null, "GAME OVER");
+                }
+                refresque();
+
+            }
+        };
+        timer.schedule(turno, 0, 2000);
+        game.getBoard().move('u');
+
     }
-    private void abrirAccion(){
+
+    private void abrirAccion() {
         JFileChooser fileChooser = new JFileChooser();
         int opcion = fileChooser.showOpenDialog(abrir);
-        if(opcion == JFileChooser.APPROVE_OPTION){
+        if (opcion == JFileChooser.APPROVE_OPTION) {
             File file = fileChooser.getSelectedFile();
-            JOptionPane.showMessageDialog(null, "La funcionalidad de abrir esta en construccion, por lo tanto el archivo: "+file.getName()+" No se puede abrir");
+            JOptionPane.showMessageDialog(null, "La funcionalidad de abrir esta en construccion, por lo tanto el archivo: " + file.getName() + " No se puede abrir");
 
         }
     }
-    private void salvarAccion(){
+
+    private void salvarAccion() {
         JFileChooser fileChooser = new JFileChooser();
         int opcion = fileChooser.showSaveDialog(null);
-        if(opcion == JFileChooser.APPROVE_OPTION){
+        if (opcion == JFileChooser.APPROVE_OPTION) {
             File file = fileChooser.getSelectedFile();
-            JOptionPane.showMessageDialog(null, "La funcionalidad de salvar esta en construccion, por lo tanto el archivo: "+file.getName()+" No se puede abrir");
+            JOptionPane.showMessageDialog(null, "La funcionalidad de salvar esta en construccion, por lo tanto el archivo: " + file.getName() + " No se puede abrir");
 
         }
     }
-    private void close(){
-        if (JOptionPane.showConfirmDialog(rootPane,"Desea terminar el programa?","Salir",JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){
+
+    private void close() {
+        if (JOptionPane.showConfirmDialog(rootPane, "Desea terminar el programa?", "Salir", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
             System.exit(0);
         }
     }
-    private void refresque() throws InterruptedException {
-        prepareElementosTablero();
+
+    private void refresque() {
+        remove(juego);
+        repaint();
+        revalidate();
+        String[][] gameS = game.getBoard().readBoard();
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 10; j++) {
+                if (gameS[i][j].equals("s")) {
+                    cuadriculaSnake[i][j].setBackground(Color.green);
+                } else if (gameS[i][j].equals("f")) {
+                    cuadriculaSnake[i][j].setBackground(Color.red);
+                } else {
+                    cuadriculaSnake[i][j].setBackground(Color.black);
+                }
+            }
+        }
+        add(juego);
+        repaint();
+        revalidate();
     }
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
         SnakeGUI gui = new SnakeGUI();
         gui.setVisible(true);
+    }
+
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        if (e.VK_UP == e.getKeyCode()){
+            game.getBoard().move('u');
+        }
+        else if (e.VK_DOWN == e.getKeyCode()){
+            game.getBoard().move('d');
+        }
+        else if (e.VK_LEFT == e.getKeyCode()){
+            game.getBoard().move('l');
+        }
+        else if (e.VK_RIGHT == e.getKeyCode()){
+            game.getBoard().move('r');
+        }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+
     }
 }

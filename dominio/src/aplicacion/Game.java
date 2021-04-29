@@ -3,7 +3,7 @@ package aplicacion;
 public class Game{
     Pj[] players;
     Board board;
-    public Game (int players, boolean bot) throws InterruptedException {
+    public Game (int players, boolean bot) {
         if (players == 1){
             this.players = new Pj[1];
             this.players[0] = new Pj();
@@ -15,7 +15,7 @@ public class Game{
         //}
         //else throw exception only enter one or two players
     }
-    public Game (int length,int width,int players, boolean bot) throws InterruptedException {
+    public Game (int length,int width,int players, boolean bot){
         if (players == 1){
             this.players = new Pj[1];
             this.players[0] = new Pj();
@@ -26,6 +26,9 @@ public class Game{
 
         //}
         //else throw exception only enter one or two players
+    }
+    public Board getBoard(){
+        return board;
     }
 
 }

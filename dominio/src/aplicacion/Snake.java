@@ -1,24 +1,26 @@
 package aplicacion;
 
+import javax.swing.*;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.concurrent.TimeUnit;
 
 public class Snake {
 
-    private Board board;
+    private final Board board;
     private SnakePart head;
     private boolean left;
     private boolean right;
     private boolean up;
     private boolean down;
-    private ArrayList<SnakePart> parts = new ArrayList<>();
+    private final ArrayList<SnakePart> parts = new ArrayList<>();
 
-    public Snake(int y,int x, Board board) throws InterruptedException {
+    public Snake(int y,int x, Board board){
         this.board = board;
         if (x < 2){
             //throw the snake need at least two spaces to the left to start
             x = 2;
+        }
+        if (x == board.width){
+            x--;
         }
         for (int x1 = x; x1 >= (x-2); x1--){
             board.addSnakePart(y,x1);
@@ -78,102 +80,99 @@ public class Snake {
         this.up = up;
     }
 
-    public void move() throws InterruptedException {
-        if (isDown()){
-            int[] from = head.getPosition();
-            int[] to = new int[2];
-            to[0] = from[0] + 1;
-            to[1] = from[1];
-            if (board.isFruit(to[0],to[1])){
-                board.addSnakePart(to[0],to[1]);
-                parts.add(0,(SnakePart) board.getElement(to[0],to[1]));
-                head = parts.get(0);
-            }
-            else {
-                board.changeElementPos(head, to);
-                to[0] = from[0];
+    public void move() {
+        try {
+            if (isDown()) {
+                int[] from = head.getPosition();
+                int[] to = new int[2];
+                to[0] = from[0] + 1;
                 to[1] = from[1];
-                for (int i = 1; i < parts.size(); i++) {
-                    SnakePart part = parts.get(i);
-                    from = part.getPosition();
-                    board.changeElementPos(part, to);
+                if (board.isFruit(to[0], to[1])) {
+                    board.addSnakePart(to[0], to[1]);
+                    parts.add(0, (SnakePart) board.getElement(to[0], to[1]));
+                    head = parts.get(0);
+                } else {
+                    board.changeElementPos(head, to);
                     to[0] = from[0];
                     to[1] = from[1];
+                    for (int i = 1; i < parts.size(); i++) {
+                        SnakePart part = parts.get(i);
+                        from = part.getPosition();
+                        board.changeElementPos(part, to);
+                        to[0] = from[0];
+                        to[1] = from[1];
+                    }
                 }
             }
-            TimeUnit.SECONDS.sleep(3);
+            if (isLeft()) {
+                int[] from = head.getPosition();
+                int[] to = new int[2];
+                to[0] = from[0];
+                to[1] = from[1] - 1;
+                if (board.isFruit(to[0], to[1])) {
+                    board.addSnakePart(to[0], to[1]);
+                    parts.add(0, (SnakePart) board.getElement(to[0], to[1]));
+                    head = parts.get(0);
+                } else {
+                    board.changeElementPos(head, to);
+                    to[0] = from[0];
+                    to[1] = from[1];
+                    for (int i = 1; i < parts.size(); i++) {
+                        SnakePart part = parts.get(i);
+                        from = part.getPosition();
+                        board.changeElementPos(part, to);
+                        to[0] = from[0];
+                        to[1] = from[1];
+                    }
+                }
+            }
+            if (isRight()) {
+                int[] from = head.getPosition();
+                int[] to = new int[2];
+                to[0] = from[0];
+                to[1] = from[1] + 1;
+                if (board.isFruit(to[0], to[1])) {
+                    board.addSnakePart(to[0], to[1]);
+                    parts.add(0, (SnakePart) board.getElement(to[0], to[1]));
+                    head = parts.get(0);
+                } else {
+                    board.changeElementPos(head, to);
+                    to[0] = from[0];
+                    to[1] = from[1];
+                    for (int i = 1; i < parts.size(); i++) {
+                        SnakePart part = parts.get(i);
+                        from = part.getPosition();
+                        board.changeElementPos(part, to);
+                        to[0] = from[0];
+                        to[1] = from[1];
+                    }
+                }
+            }
+            if (isUp()) {
+                int[] from = head.getPosition();
+                int[] to = new int[2];
+                to[0] = from[0] - 1;
+                to[1] = from[1];
+                if (board.isFruit(to[0], to[1])) {
+                    board.addSnakePart(to[0], to[1]);
+                    parts.add(0, (SnakePart) board.getElement(to[0], to[1]));
+                    head = parts.get(0);
+                } else {
+                    board.changeElementPos(head, to);
+                    to[0] = from[0];
+                    to[1] = from[1];
+                    for (int i = 1; i < parts.size(); i++) {
+                        SnakePart part = parts.get(i);
+                        from = part.getPosition();
+                        board.changeElementPos(part, to);
+                        to[0] = from[0];
+                        to[1] = from[1];
+                    }
+                }
+            }
         }
-        if (isLeft()){
-            int[] from = head.getPosition();
-            int[] to = new int[2];
-            to[0] = from[0];
-            to[1] = from[1]-1;
-            if (board.isFruit(to[0],to[1])){
-                board.addSnakePart(to[0],to[1]);
-                parts.add(0,(SnakePart) board.getElement(to[0],to[1]));
-                head = parts.get(0);
-            }
-            else {
-                board.changeElementPos(head, to);
-                to[0] = from[0];
-                to[1] = from[1];
-                for (int i = 1; i < parts.size(); i++) {
-                    SnakePart part = parts.get(i);
-                    from = part.getPosition();
-                    board.changeElementPos(part, to);
-                    to[0] = from[0];
-                    to[1] = from[1];
-                }
-            }
-            TimeUnit.SECONDS.sleep(3);
-        }
-        if (isRight()){
-            int[] from = head.getPosition();
-            int[] to = new int[2];
-            to[0] = from[0];
-            to[1] = from[1]+1;
-            if (board.isFruit(to[0],to[1])){
-                board.addSnakePart(to[0],to[1]);
-                parts.add(0,(SnakePart) board.getElement(to[0],to[1]));
-                head = parts.get(0);
-            }
-            else {
-                board.changeElementPos(head, to);
-                to[0] = from[0];
-                to[1] = from[1];
-                for (int i = 1; i < parts.size(); i++) {
-                    SnakePart part = parts.get(i);
-                    from = part.getPosition();
-                    board.changeElementPos(part, to);
-                    to[0] = from[0];
-                    to[1] = from[1];
-                }
-            }
-            TimeUnit.SECONDS.sleep(3);
-        }
-        if (isUp()){
-            int[] from = head.getPosition();
-            int[] to = new int[2];
-            to[0] = from[0] - 1;
-            to[1] = from[1];
-            if (board.isFruit(to[0],to[1])){
-                board.addSnakePart(to[0],to[1]);
-                parts.add(0,(SnakePart) board.getElement(to[0],to[1]));
-                head = parts.get(0);
-            }
-            else {
-                board.changeElementPos(head, to);
-                to[0] = from[0];
-                to[1] = from[1];
-                for (int i = 1; i < parts.size(); i++) {
-                    SnakePart part = parts.get(i);
-                    from = part.getPosition();
-                    board.changeElementPos(part, to);
-                    to[0] = from[0];
-                    to[1] = from[1];
-                }
-            }
-            TimeUnit.SECONDS.sleep(3);
+        catch (ArrayIndexOutOfBoundsException e){
+            board.setGame(false);
         }
     }
 }

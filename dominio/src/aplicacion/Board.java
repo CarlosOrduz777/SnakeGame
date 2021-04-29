@@ -9,7 +9,8 @@ public class Board {
     int length;
     int width;
     Element[][] elements;
-    public Board () throws InterruptedException {
+    boolean game = true;
+    public Board () {
         length = 10;
         width = 10;
         elements = new Element[length][width];
@@ -18,12 +19,16 @@ public class Board {
         snakes[0] = new Snake(r.nextInt(length),r.nextInt(width),this);
         generateFruit();
     }
-    public Board (int length,int width) throws InterruptedException {
+    public Board (int length,int width){
         elements = new Element[length][width];
         Random r = new Random();
         snakes = new Snake[1];
         snakes[0] = new Snake(r.nextInt(length),r.nextInt(width),this);
         generateFruit();
+    }
+
+    public void turnS (){
+        snakes[0].move();
     }
 
     public void move (char direction){
@@ -39,10 +44,6 @@ public class Board {
         else if (direction == 'l'){
             snakes[0].setLeft(true);
         }
-    }
-
-    public Element[][] getElements(){
-        return elements;
     }
 
     public int getScore(){
@@ -100,4 +101,11 @@ public class Board {
         return names;
     }
 
+    public boolean getStatus(){
+        return game;
+    }
+
+    public void setGame(boolean game) {
+        this.game = game;
+    }
 }

@@ -2,10 +2,6 @@ package aplicacion;
 
 public class SnakePart implements Element {
     String name = "s";
-    private boolean left;
-    private boolean right;
-    private boolean up;
-    private boolean down;
     private int x;
     private int y;
 
