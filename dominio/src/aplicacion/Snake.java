@@ -1,6 +1,7 @@
 package aplicacion;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 
 public class Snake {
@@ -12,6 +13,7 @@ public class Snake {
     private boolean up;
     private boolean down;
     private final ArrayList<SnakePart> parts = new ArrayList<>();
+    private Color color = Color.green;
 
     public Snake(int y,int x, Board board){
         this.board = board;
@@ -20,7 +22,7 @@ public class Snake {
             x = 2;
         }
         if (x == board.width){
-            x--;
+            x = x -2;
         }
         for (int x1 = x; x1 >= (x-2); x1--){
             board.addSnakePart(y,x1);
@@ -91,7 +93,11 @@ public class Snake {
                     board.addSnakePart(to[0], to[1]);
                     parts.add(0, (SnakePart) board.getElement(to[0], to[1]));
                     head = parts.get(0);
-                } else {
+                }
+                else if (board.isSnake(to[0],to[1])){
+                   throw new ArrayIndexOutOfBoundsException();
+                }
+                else {
                     board.changeElementPos(head, to);
                     to[0] = from[0];
                     to[1] = from[1];
@@ -113,7 +119,11 @@ public class Snake {
                     board.addSnakePart(to[0], to[1]);
                     parts.add(0, (SnakePart) board.getElement(to[0], to[1]));
                     head = parts.get(0);
-                } else {
+                }
+                else if (board.isSnake(to[0],to[1])){
+                    throw new ArrayIndexOutOfBoundsException();
+                }
+                else {
                     board.changeElementPos(head, to);
                     to[0] = from[0];
                     to[1] = from[1];
@@ -135,7 +145,11 @@ public class Snake {
                     board.addSnakePart(to[0], to[1]);
                     parts.add(0, (SnakePart) board.getElement(to[0], to[1]));
                     head = parts.get(0);
-                } else {
+                }
+                else if (board.isSnake(to[0],to[1])){
+                    throw new ArrayIndexOutOfBoundsException();
+                }
+                else {
                     board.changeElementPos(head, to);
                     to[0] = from[0];
                     to[1] = from[1];
@@ -157,7 +171,11 @@ public class Snake {
                     board.addSnakePart(to[0], to[1]);
                     parts.add(0, (SnakePart) board.getElement(to[0], to[1]));
                     head = parts.get(0);
-                } else {
+                }
+                else if (board.isSnake(to[0],to[1])){
+                    throw new ArrayIndexOutOfBoundsException();
+                }
+                else {
                     board.changeElementPos(head, to);
                     to[0] = from[0];
                     to[1] = from[1];
@@ -174,5 +192,12 @@ public class Snake {
         catch (ArrayIndexOutOfBoundsException e){
             board.setGame(false);
         }
+    }
+
+    public void setColor(Color c){
+        color = c;
+    }
+    public Color getColor(){
+        return color;
     }
 }

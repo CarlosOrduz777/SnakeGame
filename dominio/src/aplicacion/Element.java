@@ -1,5 +1,7 @@
 package aplicacion;
 
+import java.awt.*;
+
 public interface Element {
     String name = " ";
 
@@ -9,4 +11,5 @@ public interface Element {
     }
     default void setPos(int[] to){}
 
+    Color getColor();
 }

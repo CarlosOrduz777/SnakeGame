@@ -42,7 +42,6 @@ public class SnakeGUI extends JFrame implements ActionListener, KeyListener {
         Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
         setSize((int) d.getWidth() / 2, (int) d.getHeight() / 2);
         setLocationRelativeTo(null);
-
         prepareElementosMenu();
         prepareElementosTablero();
         prepareElementosPrincipal();
@@ -55,7 +54,7 @@ public class SnakeGUI extends JFrame implements ActionListener, KeyListener {
         fondo.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("snake.jpg"))));
         fondo.setOpaque(false);
         fondo.setBounds(270, 10, 200, 70);
-        titulo = new JLabel("JEWEL  \n" + "QUEST");
+        titulo = new JLabel("SNAKE  \n" + "GAME");
         principal = new JPanel();
         principal.setLayout(new BorderLayout());
         principal.add(fondo, BorderLayout.CENTER);
@@ -90,7 +89,7 @@ public class SnakeGUI extends JFrame implements ActionListener, KeyListener {
         menu.add(salvar);
         salvarComo = new JMenuItem("Salvar Como");
         menu.add(salvarComo);
-        cambiarColor = new JMenuItem("Cambiar el color del fondo");
+        cambiarColor = new JMenuItem("Cambiar el color de la serpiente");
         menu.add(cambiarColor);
         salir = new JMenuItem("Salir");
         menu.add(salir);
@@ -98,6 +97,8 @@ public class SnakeGUI extends JFrame implements ActionListener, KeyListener {
 
     private void prepareElementosTablero(){
         juego = new JPanel();
+        addKeyListener(this);
+        setFocusable(true);
         elementos = new JPanel();
         elementos.setLayout(new GridLayout(10, 10));
         this.cuadriculaSnake = new JPanel[10][10];
@@ -134,18 +135,15 @@ public class SnakeGUI extends JFrame implements ActionListener, KeyListener {
         prepareMenuAcciones();
         prepareMenuPrincipalAcciones();
         prepareJugarAcciones();
-        juego.addKeyListener(this);
     }
 
+
     private void prepareMenuPrincipalAcciones() {
-
         jugar.addActionListener(this);
-
     }
 
     private void prepareJugarAcciones() {
         menuPrincipal.addActionListener(this);
-
 
     }
 
@@ -154,7 +152,6 @@ public class SnakeGUI extends JFrame implements ActionListener, KeyListener {
         abrir.addActionListener(this);
         salvar.addActionListener(this);
         cambiarColor.addActionListener(this);
-        //arriba
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -168,7 +165,6 @@ public class SnakeGUI extends JFrame implements ActionListener, KeyListener {
             jugarAccion();
         } else if (e.getSource() == menuPrincipal) {
             menuPrincipalAccion();
-
         } else if (e.getSource() == cambiarColor) {
             cambiarColorAccion();
         }
@@ -177,9 +173,7 @@ public class SnakeGUI extends JFrame implements ActionListener, KeyListener {
     private void cambiarColorAccion() {
         JColorChooser sel = new JColorChooser();
         Color color = sel.showDialog(null, "Seleccione un color", Color.BLACK);
-        elementos.setBackground(color);
-
-
+        game.getBoard().setSnakeColor(color);
     }
 
     private void menuPrincipalAccion() {
@@ -204,6 +198,7 @@ public class SnakeGUI extends JFrame implements ActionListener, KeyListener {
             @Override
             public void run() {
                 refresque();
+
                 game.getBoard().turnS();
                 if (!game.getBoard().getStatus()) {
                     timer.cancel();
@@ -211,12 +206,9 @@ public class SnakeGUI extends JFrame implements ActionListener, KeyListener {
                     JOptionPane.showMessageDialog(null, "GAME OVER");
                 }
                 refresque();
-
             }
         };
-        timer.schedule(turno, 0, 2000);
-        game.getBoard().move('u');
-
+        timer.schedule(turno, 0, 1000);
     }
 
     private void abrirAccion() {
@@ -225,7 +217,6 @@ public class SnakeGUI extends JFrame implements ActionListener, KeyListener {
         if (opcion == JFileChooser.APPROVE_OPTION) {
             File file = fileChooser.getSelectedFile();
             JOptionPane.showMessageDialog(null, "La funcionalidad de abrir esta en construccion, por lo tanto el archivo: " + file.getName() + " No se puede abrir");
-
         }
     }
 
@@ -235,7 +226,6 @@ public class SnakeGUI extends JFrame implements ActionListener, KeyListener {
         if (opcion == JFileChooser.APPROVE_OPTION) {
             File file = fileChooser.getSelectedFile();
             JOptionPane.showMessageDialog(null, "La funcionalidad de salvar esta en construccion, por lo tanto el archivo: " + file.getName() + " No se puede abrir");
-
         }
     }
 
@@ -253,18 +243,20 @@ public class SnakeGUI extends JFrame implements ActionListener, KeyListener {
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
                 if (gameS[i][j].equals("s")) {
-                    cuadriculaSnake[i][j].setBackground(Color.green);
+                    cuadriculaSnake[i][j].setBackground(game.getBoard().getSnakeColor());
                 } else if (gameS[i][j].equals("f")) {
-                    cuadriculaSnake[i][j].setBackground(Color.red);
+                    cuadriculaSnake[i][j].setBackground(game.getBoard().getFruitColor(i,j));
                 } else {
                     cuadriculaSnake[i][j].setBackground(Color.black);
                 }
             }
         }
+        score.setText("Score :" + " " + game.getBoard().getScore());
         add(juego);
         repaint();
         revalidate();
     }
+
 
     public static void main(String[] args) {
         SnakeGUI gui = new SnakeGUI();
@@ -279,6 +271,7 @@ public class SnakeGUI extends JFrame implements ActionListener, KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
+        int key = e.getKeyCode();
         if (e.VK_UP == e.getKeyCode()){
             game.getBoard().move('u');
         }

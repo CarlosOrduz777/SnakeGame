@@ -1,5 +1,6 @@
 package aplicacion;
 
+import java.awt.*;
 import java.util.Arrays;
 import java.util.Random;
 
@@ -10,6 +11,7 @@ public class Board {
     int width;
     Element[][] elements;
     boolean game = true;
+    int score = 0;
     public Board () {
         length = 10;
         width = 10;
@@ -29,6 +31,11 @@ public class Board {
 
     public void turnS (){
         snakes[0].move();
+        int tempScore = score;
+        setScore();
+        if (this.score > tempScore){
+            generateFruit();
+        }
     }
 
     public void move (char direction){
@@ -46,8 +53,8 @@ public class Board {
         }
     }
 
-    public int getScore(){
-        return snakes[0].getScore();
+    public void setScore(){
+        score = snakes[0].getScore() - 3;
     }
 
     public void generateFruit(){ //It can be changed to generate aplicacion.Food to implement the other kind of foods
@@ -80,10 +87,14 @@ public class Board {
         elements[y][x] = snakePart;
     }
 
-
     public Element getElement(int y, int x){return elements[y][x];}
 
     public boolean isFruit(int y, int x){ return elements[y][x] instanceof Fruit; }
+
+    public Color getFruitColor(int y, int x){ return elements[y][x].getColor(); }
+
+
+    public boolean isSnake(int y, int x){ return elements[y][x] instanceof SnakePart; }
 
     public String[][] readBoard(){
         String[][] names = new String[length][width];
@@ -96,7 +107,6 @@ public class Board {
                     names[i][j] = elements[i][j].getName();
                 }
             }
-            System.out.println(Arrays.toString(names[i]));
         }
         return names;
     }
@@ -105,7 +115,19 @@ public class Board {
         return game;
     }
 
+    public int getScore() {
+        return score;
+    }
+
     public void setGame(boolean game) {
         this.game = game;
+    }
+
+    public void setSnakeColor(Color color) {
+        snakes[0].setColor(color);
+    }
+
+    public Color getSnakeColor() {
+        return snakes[0].getColor();
     }
 }

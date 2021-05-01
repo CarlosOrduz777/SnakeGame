@@ -1,5 +1,7 @@
 package aplicacion;
 
+import java.awt.*;
+
 public class SnakePart implements Element {
     String name = "s";
     private int x;
@@ -26,5 +28,10 @@ public class SnakePart implements Element {
     @Override
     public String getName() {
         return name;
+    }
+
+    @Override
+    public Color getColor() {
+        return null;
     }
 }
