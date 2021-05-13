@@ -76,7 +76,7 @@ public class SnakeGUI extends JFrame implements ActionListener, KeyListener {
         principal.add(grillaBotones, BorderLayout.SOUTH);
     }
 
-    private void prepareElementosMenu() {
+    private void  prepareElementosMenu() {
         menuBar = new JMenuBar();
         setJMenuBar(menuBar);
         menu = new JMenu("Menu");
@@ -177,7 +177,7 @@ public class SnakeGUI extends JFrame implements ActionListener, KeyListener {
     }
 
     private void menuPrincipalAccion() {
-        game = new Game(1,false);
+        game = new Game(2,false);
         remove(juego);
         repaint();
         revalidate();
@@ -187,28 +187,58 @@ public class SnakeGUI extends JFrame implements ActionListener, KeyListener {
     }
 
     private void jugarAccion() {
-        remove(principal);
-        repaint();
-        revalidate();
-        add(juego);
-        repaint();
-        revalidate();
-        timer = new Timer();
-        TimerTask turno = new TimerTask() {
-            @Override
-            public void run() {
-                refresque();
+       String respuesta = JOptionPane.showInputDialog("Introduzca el numero de Jugadores (1 o 2)");
+       if(Integer.parseInt(respuesta)==1) {
+           remove(principal);
+           repaint();
+           revalidate();
+           add(juego);
+           repaint();
+           revalidate();
+           timer = new Timer();
+           TimerTask turno = new TimerTask() {
+               @Override
+               public void run() {
+                   refresque();
 
-                game.getBoard().turnS();
-                if (!game.getBoard().getStatus()) {
-                    timer.cancel();
-                    timer.purge();
-                    JOptionPane.showMessageDialog(null, "GAME OVER");
-                }
-                refresque();
-            }
-        };
-        timer.schedule(turno, 0, 1000);
+                   game.getBoard().turnS();
+                   if (!game.getBoard().getStatus()) {
+                       timer.cancel();
+                       timer.purge();
+                       JOptionPane.showMessageDialog(null, "GAME OVER");
+                   }
+                   refresque();
+               }
+           };
+           timer.schedule(turno, 0, 1000);
+       }else if(Integer.parseInt(respuesta) == 2){
+           //Interfaz para dos jugadores
+           remove(principal);
+           repaint();
+           revalidate();
+           add(juego);
+           repaint();
+           revalidate();
+           timer = new Timer();
+           TimerTask turno = new TimerTask() {
+               @Override
+               public void run() {
+                   refresque();
+
+                   game.getBoard().turnS();
+                   if (!game.getBoard().getStatus()) {
+                       timer.cancel();
+                       timer.purge();
+                       JOptionPane.showMessageDialog(null, "GAME OVER");
+                   }
+                   refresque();
+               }
+           };
+           timer.schedule(turno, 0, 1000);
+
+       }else{
+           jugarAccion();
+       }
     }
 
     private void abrirAccion() {
@@ -225,7 +255,7 @@ public class SnakeGUI extends JFrame implements ActionListener, KeyListener {
         int opcion = fileChooser.showSaveDialog(null);
         if (opcion == JFileChooser.APPROVE_OPTION) {
             File file = fileChooser.getSelectedFile();
-            JOptionPane.showMessageDialog(null, "La funcionalidad de salvar esta en construccion, por lo tanto el archivo: " + file.getName() + " No se puede abrir");
+            //JOptionPane.showMessageDialog(null, "La funcionalidad de salvar esta en construccion, por lo tanto el archivo: " + file.getName() + " No se puede abrir");
         }
     }
 
