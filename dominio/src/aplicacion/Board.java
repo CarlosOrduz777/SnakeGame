@@ -1,8 +1,9 @@
 package aplicacion;
 
 import java.awt.*;
-import java.util.Arrays;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Board {
 
@@ -12,6 +13,8 @@ public class Board {
     Element[][] elements;
     boolean game = true;
     int[] score = {0,0};
+    int foodOnScreen =0;
+    private Timer timer;
 
 
     public Board (int players) {
@@ -22,13 +25,13 @@ public class Board {
             Random r = new Random();
             snakes = new Snake[1];
             snakes[0] = new Snake(r.nextInt(length), r.nextInt(width), this);
-            generateFruit();
+            generateFood();
         }else if(players == 2){
             snakes = new Snake[2];
             snakes[0] = new Snake(0,0,this);
             snakes[1] = new Snake(9,9,this);
-            generateFruit();
-            generateFruit();
+            generateFood();
+            generateFood();
         }
     }
 
@@ -37,7 +40,7 @@ public class Board {
         Random r = new Random();
         snakes = new Snake[1];
         snakes[0] = new Snake(r.nextInt(length),r.nextInt(width),this);
-        generateFruit();
+        generateFood();
     }
 
     /**
@@ -45,24 +48,23 @@ public class Board {
      */
     public void turnS (int players){
         if (players == 2) {
+            snakes[1].tae(snakes[0].getDmg());
+            snakes[0].tae(snakes[1].getDmg());
             snakes[0].move();
+            snakes[0].updateParts();
             snakes[1].move();
-            int tempScore1 = score[0];
-            int tempScore2 = score[1];
+            snakes[1].updateParts();
             setScore(2);
-            if (this.score[0] > tempScore1) {
-                generateFruit();
-            }
-            if (this.score[1] > tempScore2) {
-                generateFruit();
+            while (foodOnScreen < 2){
+                generateFood();
             }
         }
         else {
             snakes[0].move();
-            int tempScore1 = score[0];
+            snakes[0].updateParts();
             setScore(1);
-            if (this.score[0] > tempScore1) {
-                generateFruit();
+            if (foodOnScreen < 1) {
+                generateFood();
             }
         }
     }
@@ -104,18 +106,18 @@ public class Board {
 
     public void setScore(int player){
         if (player == 2){
-            score[0] = snakes[0].getScore() - 3;
-            score[1] = snakes[1].getScore() - 3;
+            score[0] = snakes[0].getScore();
+            score[1] = snakes[1].getScore();
         }
         else {
-            score[0] = snakes[0].getScore() - 3;
+            score[0] = snakes[0].getScore();
         }
     }
 
     /**
      * Generate an aleatory fruit in the board
      */
-    public void generateFruit(){ //It can be changed to generate aplicacion.Food to implement the other kind of foods
+    public void generateFood(){ //It can be changed to generate aplicacion.Food to implement the other kind of foods
         Random r = new Random();
         int y = r.nextInt(length);
         int x = r.nextInt(width);
@@ -123,7 +125,34 @@ public class Board {
             y = r.nextInt(length);
             x = r.nextInt(width);
         }
-        elements[y][x] = new Fruit(y,x);
+        Random r2 = new Random();
+        int opt = r2.nextInt(4);
+        if (opt == 0) {
+            elements[y][x] = new Fruit(y, x);
+        }
+        else if (opt == 1){
+            elements[y][x] = new RainbowFruit(y,x);
+        }
+        else if(opt == 2){
+            elements[y][x] = new Candy(y,x);
+        }
+        else {
+            elements[y][x] = new Poison(y,x);
+        }
+        foodOnScreen +=1;
+        timer = new Timer();
+        int finalY = y;
+        int finalX = x;
+        TimerTask turno = new TimerTask() {
+            @Override
+            public void run() {
+                int[] pos = {finalY, finalX};
+                if (!isSnake(finalY,finalX)){
+                    deleteElement(pos);
+                }
+            }
+        };
+        timer.schedule(turno, 12000);
     }
 
     /**
@@ -146,6 +175,9 @@ public class Board {
      * @param pos position of the Element that we want to delete
      */
     public void deleteElement(int[] pos){
+        if (elements[pos[0]][pos[1]] instanceof Food){
+            foodOnScreen -= 1;
+        }
         elements[pos[0]][pos[1]] = null;
     }
 
@@ -162,6 +194,12 @@ public class Board {
     public Element getElement(int y, int x){return elements[y][x];}
 
     public boolean isFruit(int y, int x){ return elements[y][x] instanceof Fruit; }
+
+    public boolean isRainbowFruit(int y, int x){ return elements[y][x] instanceof RainbowFruit; }
+
+    public boolean isCandy(int y, int x){ return elements[y][x] instanceof Candy; }
+
+    public boolean isPoison(int y, int x){ return elements[y][x] instanceof Poison; }
 
     public boolean isSnake(int y, int x){ return elements[y][x] instanceof SnakePart; }
 
@@ -196,8 +234,9 @@ public class Board {
         this.game = game;
     }
 
-    public void setSnakeColor(Color color) {
-        snakes[0].setColor(color);
+    public void setSnakeColor(Color color,int snake) {
+        --snake;
+        snakes[snake].setColor(color);
     }
 
     public Color getSnakeColor() {

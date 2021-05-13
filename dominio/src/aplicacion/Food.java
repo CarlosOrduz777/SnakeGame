@@ -1,5 +1,9 @@
 package aplicacion;
 
+import javax.swing.*;
+import java.util.Timer;
+import java.util.TimerTask;
+
 public abstract class Food implements Element{
     private int x;
     private int y;
