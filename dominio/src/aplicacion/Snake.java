@@ -22,7 +22,7 @@ public class Snake {
             x = 2;
         }
         if (x == board.width){
-            x = x -2;
+            x = x - 4;
         }
         for (int x1 = x; x1 >= (x-2); x1--){
             board.addSnakePart(y,x1);
