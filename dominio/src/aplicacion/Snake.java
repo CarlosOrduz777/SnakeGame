@@ -23,10 +23,9 @@ public class Snake {
                 parts.add((SnakePart) board.getElement(y, x1));
             }
             head = parts.get(0);
+            head.setColor(new Color(0, 153, 51));
             setLeft(true);
-
         }else {
-
             if (x < 2) {
                 //throw the snake need at least two spaces to the left to start
                 x = 2;
@@ -39,6 +38,7 @@ public class Snake {
                 parts.add((SnakePart) board.getElement(y, x1));
             }
             head = parts.get(0);
+            head.setColor(new Color(0, 153, 51));
             setRight(true);
         }
         move();
@@ -106,6 +106,8 @@ public class Snake {
                     board.addSnakePart(to[0], to[1]);
                     parts.add(0, (SnakePart) board.getElement(to[0], to[1]));
                     head = parts.get(0);
+                    setColor(color);
+                    head.setColor(new Color(0, 153, 51));
                 }
                 else if (board.isSnake(to[0],to[1])){
                    throw new ArrayIndexOutOfBoundsException();
@@ -208,6 +210,9 @@ public class Snake {
     }
 
     public void setColor(Color c){
+        for (SnakePart snakePart: parts){
+            snakePart.setColor(c);
+        }
         color = c;
     }
     public Color getColor(){

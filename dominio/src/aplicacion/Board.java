@@ -11,13 +11,15 @@ public class Board {
     int width;
     Element[][] elements;
     boolean game = true;
-    int score = 0;
+    int[] score = {0,0};
+
+
     public Board (int players) {
         length = 10;
         width = 10;
         elements = new Element[length][width];
-        Random r = new Random();
         if(players ==1) {
+            Random r = new Random();
             snakes = new Snake[1];
             snakes[0] = new Snake(r.nextInt(length), r.nextInt(width), this);
             generateFruit();
@@ -26,8 +28,10 @@ public class Board {
             snakes[0] = new Snake(0,0,this);
             snakes[1] = new Snake(9,9,this);
             generateFruit();
+            generateFruit();
         }
     }
+
     public Board (int length,int width){
         elements = new Element[length][width];
         Random r = new Random();
@@ -39,13 +43,27 @@ public class Board {
     /**
      *
      */
-    public void turnS (){
-        snakes[0].move();
-        snakes[1].move();
-        int tempScore = score;
-        setScore();
-        if (this.score > tempScore){
-            generateFruit();
+    public void turnS (int players){
+        if (players == 2) {
+            snakes[0].move();
+            snakes[1].move();
+            int tempScore1 = score[0];
+            int tempScore2 = score[1];
+            setScore(2);
+            if (this.score[0] > tempScore1) {
+                generateFruit();
+            }
+            if (this.score[1] > tempScore2) {
+                generateFruit();
+            }
+        }
+        else {
+            snakes[0].move();
+            int tempScore1 = score[0];
+            setScore(1);
+            if (this.score[0] > tempScore1) {
+                generateFruit();
+            }
         }
     }
 
@@ -68,8 +86,30 @@ public class Board {
         }
     }
 
-    public void setScore(){
-        score = snakes[0].getScore() - 3;
+    public void move2 (char direction){
+        if (direction == 'u'){
+            snakes[1].setUp(true);
+        }
+        else if (direction == 'r'){
+            snakes[1].setRight(true);
+        }
+        else if (direction == 'd'){
+            snakes[1].setDown(true);
+        }
+        else if (direction == 'l'){
+            snakes[1].setLeft(true);
+        }
+    }
+
+
+    public void setScore(int player){
+        if (player == 2){
+            score[0] = snakes[0].getScore() - 3;
+            score[1] = snakes[1].getScore() - 3;
+        }
+        else {
+            score[0] = snakes[0].getScore() - 3;
+        }
     }
 
     /**
@@ -123,9 +163,6 @@ public class Board {
 
     public boolean isFruit(int y, int x){ return elements[y][x] instanceof Fruit; }
 
-    public Color getFruitColor(int y, int x){ return elements[y][x].getColor(); }
-
-
     public boolean isSnake(int y, int x){ return elements[y][x] instanceof SnakePart; }
 
     /**
@@ -151,7 +188,7 @@ public class Board {
         return game;
     }
 
-    public int getScore() {
+    public int[] getScore() {
         return score;
     }
 

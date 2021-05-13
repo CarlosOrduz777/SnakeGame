@@ -4,6 +4,7 @@ import java.awt.*;
 
 public class SnakePart implements Element {
     String name = "s";
+    Color color = Color.GREEN;
     private int x;
     private int y;
 
@@ -32,6 +33,11 @@ public class SnakePart implements Element {
 
     @Override
     public Color getColor() {
-        return null;
+        return color;
+    }
+
+    @Override
+    public void setColor(Color color) {
+        this.color = color;
     }
 }

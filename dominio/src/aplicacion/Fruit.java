@@ -35,5 +35,10 @@ public class Fruit extends Food{
         return color;
     }
 
+    @Override
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
     //Should be started with a random color
 }

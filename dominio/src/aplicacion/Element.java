@@ -4,6 +4,7 @@ import java.awt.*;
 
 public interface Element {
     String name = " ";
+    Color color = null;
 
     int[] getPosition();
     default String getName(){
@@ -12,4 +13,5 @@ public interface Element {
     default void setPos(int[] to){}
 
     Color getColor();
+    void setColor(Color color);
 }

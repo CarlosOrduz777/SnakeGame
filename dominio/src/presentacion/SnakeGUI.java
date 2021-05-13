@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -201,7 +202,7 @@ public class SnakeGUI extends JFrame implements ActionListener, KeyListener {
                public void run() {
                    refresque();
 
-                   game.getBoard().turnS();
+                   game.getBoard().turnS(1);
                    if (!game.getBoard().getStatus()) {
                        timer.cancel();
                        timer.purge();
@@ -224,14 +225,15 @@ public class SnakeGUI extends JFrame implements ActionListener, KeyListener {
                @Override
                public void run() {
                    refresque();
-
-                   game.getBoard().turnS();
+                   game.getBoard().turnS(2);
                    if (!game.getBoard().getStatus()) {
                        timer.cancel();
                        timer.purge();
                        JOptionPane.showMessageDialog(null, "GAME OVER");
                    }
-                   refresque();
+                   else {
+                       refresque();
+                   }
                }
            };
            timer.schedule(turno, 0, 1000);
@@ -273,15 +275,15 @@ public class SnakeGUI extends JFrame implements ActionListener, KeyListener {
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
                 if (gameS[i][j].equals("s")) {
-                    cuadriculaSnake[i][j].setBackground(game.getBoard().getSnakeColor());
+                    cuadriculaSnake[i][j].setBackground(game.getBoard().getElement(i,j).getColor());
                 } else if (gameS[i][j].equals("f")) {
-                    cuadriculaSnake[i][j].setBackground(game.getBoard().getFruitColor(i,j));
+                    cuadriculaSnake[i][j].setBackground(game.getBoard().getElement(i,j).getColor());
                 } else {
                     cuadriculaSnake[i][j].setBackground(Color.black);
                 }
             }
         }
-        score.setText("Score :" + " " + game.getBoard().getScore());
+        score.setText("Score :" + " " + Arrays.toString(game.getBoard().getScore()));
         add(juego);
         repaint();
         revalidate();
