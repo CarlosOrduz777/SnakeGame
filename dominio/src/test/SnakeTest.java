@@ -13,7 +13,7 @@ public class SnakeTest {
 
     @Test
     public void shouldMove() throws InterruptedException {
-        Board board = new Board();
+        Board board = new Board(1);
         board.readBoard();
         assertTrue(true);
     }

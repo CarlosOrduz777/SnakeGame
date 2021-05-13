@@ -17,20 +17,30 @@ public class Snake {
 
     public Snake(int y,int x, Board board){
         this.board = board;
-        if (x < 2){
-            //throw the snake need at least two spaces to the left to start
-            x = 2;
+        if(x ==9 && y==9){
+            for (int x1 = x-2; x1 <= x; x1++) {
+                board.addSnakePart(y, x1);
+                parts.add((SnakePart) board.getElement(y, x1));
+            }
+            head = parts.get(0);
+            setLeft(true);
+
+        }else {
+
+            if (x < 2) {
+                //throw the snake need at least two spaces to the left to start
+                x = 2;
+            }
+            if (x == board.width) {
+                x = x - 2;
+            }
+            for (int x1 = x; x1 >= (x - 2); x1--) {
+                board.addSnakePart(y, x1);
+                parts.add((SnakePart) board.getElement(y, x1));
+            }
+            head = parts.get(0);
+            setRight(true);
         }
-        if (x == board.width){
-            x = x -2;
-        }
-        for (int x1 = x; x1 >= (x-2); x1--){
-            board.addSnakePart(y,x1);
-            parts.add((SnakePart) board.getElement(y,x1));
-        }
-        head = parts.get(0);
-        setRight(true);
-        board.readBoard();
         move();
     }
 
@@ -82,6 +92,9 @@ public class Snake {
         this.up = up;
     }
 
+    /**
+     * Move the Snake according to the current direction
+     */
     public void move() {
         try {
             if (isDown()) {

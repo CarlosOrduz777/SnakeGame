@@ -1,0 +1,7 @@
+-La cabeza tiene que ser de color distinto al cuerpo
+-2 jugadores.
+-Que cada jugador elija su color.
+-Que al comer del mismo color crezca el doble.
+-Limitar los colores(serpiente).
+-Sorpresas y comidas (Flechas de velocidad).
+-Corregir los instanceOf.

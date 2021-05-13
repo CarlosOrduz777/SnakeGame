@@ -12,14 +12,21 @@ public class Board {
     Element[][] elements;
     boolean game = true;
     int score = 0;
-    public Board () {
+    public Board (int players) {
         length = 10;
         width = 10;
         elements = new Element[length][width];
         Random r = new Random();
-        snakes = new Snake[1];
-        snakes[0] = new Snake(r.nextInt(length),r.nextInt(width),this);
-        generateFruit();
+        if(players ==1) {
+            snakes = new Snake[1];
+            snakes[0] = new Snake(r.nextInt(length), r.nextInt(width), this);
+            generateFruit();
+        }else if(players == 2){
+            snakes = new Snake[2];
+            snakes[0] = new Snake(0,0,this);
+            snakes[1] = new Snake(9,9,this);
+            generateFruit();
+        }
     }
     public Board (int length,int width){
         elements = new Element[length][width];
@@ -29,8 +36,12 @@ public class Board {
         generateFruit();
     }
 
+    /**
+     *
+     */
     public void turnS (){
         snakes[0].move();
+        snakes[1].move();
         int tempScore = score;
         setScore();
         if (this.score > tempScore){
@@ -38,6 +49,10 @@ public class Board {
         }
     }
 
+    /**
+     * move the Snake to the direction we want
+     * @param direction that we want move the Snake
+     */
     public void move (char direction){
         if (direction == 'u'){
             snakes[0].setUp(true);
@@ -57,6 +72,9 @@ public class Board {
         score = snakes[0].getScore() - 3;
     }
 
+    /**
+     * Generate an aleatory fruit in the board
+     */
     public void generateFruit(){ //It can be changed to generate aplicacion.Food to implement the other kind of foods
         Random r = new Random();
         int y = r.nextInt(length);
@@ -68,6 +86,11 @@ public class Board {
         elements[y][x] = new Fruit(y,x);
     }
 
+    /**
+     * change the position of one Element to a new position
+     * @param element the Element that we want to move
+     * @param to the position that we want put the Element
+     */
     public void changeElementPos(Element element, int[] to){
         try {
             int[] from = element.getPosition();
@@ -78,10 +101,19 @@ public class Board {
         catch (ArrayIndexOutOfBoundsException ignored){}
     }
 
+    /**
+     * delete an Element from the elements board
+     * @param pos position of the Element that we want to delete
+     */
     public void deleteElement(int[] pos){
         elements[pos[0]][pos[1]] = null;
     }
 
+    /**
+     * add new part in the Snake
+     * @param y position y of the Snake
+     * @param x position x of the Snake
+     */
     public void addSnakePart(int y, int x){
         SnakePart snakePart = new SnakePart(y,x);
         elements[y][x] = snakePart;
@@ -96,6 +128,10 @@ public class Board {
 
     public boolean isSnake(int y, int x){ return elements[y][x] instanceof SnakePart; }
 
+    /**
+     * read the the actual board
+     * @return a new board with diferent values
+     */
     public String[][] readBoard(){
         String[][] names = new String[length][width];
         for (int i = 0; i < length; i++){
