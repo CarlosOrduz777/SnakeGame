@@ -3,10 +3,22 @@ package aplicacion;
 import java.awt.*;
 import java.util.Random;
 
+/**
+ * Clase correspondiente a las frutas, alimento que al consumirse aumentan el tamaño de la serpiente en 1, y si la fruta
+ * es del mismo color que la serpiente aumenta el tamaño en 2.
+ * @author Carlos Orduz
+ * @author Felipe Giraldo
+ * @version 1.0
+ */
 public class Fruit extends Food{
     String name = "f";
     Color color;
 
+    /**
+     * Constructor del objeto fruta que se crea con un color aleatorio de entre los 11 colores definidos
+     * @param y posicion en y de la fruta
+     * @param x posicion en x de la fruta
+     */
     public Fruit(int y, int x) {
         super(y,x);
         Random r = new Random();
@@ -26,15 +38,27 @@ public class Fruit extends Food{
         }
     }
 
+    /**
+     * Retorna el nombre del elemento
+     * @return string con el nombre del elemento
+     */
     @Override
     public String getName() {
         return name;
     }
 
+    /**
+     * Retorna el color del elemento
+     * @return color del elemento
+     */
     public Color getColor() {
         return color;
     }
 
+    /**
+     * Nos permite asignar un color a un elemento
+     * @param color color que deseamos asignarle al elemento
+     */
     @Override
     public void setColor(Color color) {
         this.color = color;

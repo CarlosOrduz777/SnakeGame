@@ -48,7 +48,7 @@ public abstract class Surprise implements Element{
 
     @Override
     public void setPos(int[] to) {
-        Element.super.setPos(to);
+        //Element.super.setPos(to);
     }
 
     @Override

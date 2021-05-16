@@ -5,6 +5,12 @@ import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
+/**
+ * Clase que construye y manipula un tablero correspondiente al juego SnOOPe, modificación del juego snake.
+ * @author Carlos Orduz
+ * @author Felipe Giraldo
+ * @version 1.0
+ */
 public class Board {
 
     Snake[] snakes;
@@ -16,7 +22,10 @@ public class Board {
     int foodOnScreen =0;
     private Timer timer;
 
-
+    /**
+     * Constructor de la clase board, inicializa un tablero con un tamaño fijo
+     * @param players es la cantidad de jugadores que van a jugar snake
+     */
     public Board (int players) {
         length = 10;
         width = 10;
@@ -35,21 +44,14 @@ public class Board {
         }
     }
 
-    public Board (int length,int width){
-        elements = new Element[length][width];
-        Random r = new Random();
-        snakes = new Snake[1];
-        snakes[0] = new Snake(r.nextInt(length),r.nextInt(width),this);
-        generateFood();
-    }
-
     /**
-     *
+     * Metodo que actualiza el tablero, mueve la serpiente y genera los elementos en un turno.
+     * @param players la cantidad de jugadores que estan jugando snake.
      */
     public void turnS (int players){
         if (players == 2) {
-            snakes[1].tae(snakes[0].getDmg());
-            snakes[0].tae(snakes[1].getDmg());
+            snakes[1].shorten(snakes[0].getDamage());
+            snakes[0].shorten(snakes[1].getDamage());
             snakes[0].move();
             snakes[0].updateParts();
             snakes[1].move();
@@ -70,40 +72,50 @@ public class Board {
     }
 
     /**
-     * move the Snake to the direction we want
-     * @param direction that we want move the Snake
+     * mueve la serpiente 1 en una dirección, arriba, abajo, izquierda y derecha.
+     * @param direction la dirección a la cual se desea mover la serpiente dada por caracteres arriba 'u', abajo 'd'
+     *                  izquierda 'l' y derecha 'r'.
      */
     public void move (char direction){
         if (direction == 'u'){
-            snakes[0].setUp(true);
+            snakes[0].setUp();
         }
         else if (direction == 'r'){
-            snakes[0].setRight(true);
+            snakes[0].setRight();
         }
         else if (direction == 'd'){
-            snakes[0].setDown(true);
+            snakes[0].setDown();
         }
         else if (direction == 'l'){
-            snakes[0].setLeft(true);
+            snakes[0].setLeft();
         }
     }
 
+    /**
+     * mueve la serpiente 2 en una dirección, arriba, abajo, izquierda y derecha.
+     * @param direction la dirección a la cual se desea mover la serpiente dada por caracteres arriba 'u', abajo 'd'
+     *                  izquierda 'l' y derecha 'r'.
+     */
     public void move2 (char direction){
         if (direction == 'u'){
-            snakes[1].setUp(true);
+            snakes[1].setUp();
         }
         else if (direction == 'r'){
-            snakes[1].setRight(true);
+            snakes[1].setRight();
         }
         else if (direction == 'd'){
-            snakes[1].setDown(true);
+            snakes[1].setDown();
         }
         else if (direction == 'l'){
-            snakes[1].setLeft(true);
+            snakes[1].setLeft();
         }
     }
 
 
+    /**
+     * metodo que establece los puntajes de los jugadores.
+     * @param player numero de jugadores jugando snake.
+     */
     public void setScore(int player){
         if (player == 2){
             score[0] = snakes[0].getScore();
@@ -115,7 +127,8 @@ public class Board {
     }
 
     /**
-     * Generate an aleatory fruit in the board
+     * Genera una comida aleatoria en el tablero, esta comida puede ser una fruta, una fruta arcoiris, un dulce o un
+     * veneno.
      */
     public void generateFood(){ //It can be changed to generate aplicacion.Food to implement the other kind of foods
         Random r = new Random();
@@ -157,9 +170,9 @@ public class Board {
     }
 
     /**
-     * change the position of one Element to a new position
-     * @param element the Element that we want to move
-     * @param to the position that we want put the Element
+     * cambia la posición de un elemento en el tablero
+     * @param element Elemento que se desea mover
+     * @param to posición a la cual se va a mover el elementos
      */
     public void changeElementPos(Element element, int[] to){
         try {
@@ -172,8 +185,8 @@ public class Board {
     }
 
     /**
-     * delete an Element from the elements board
-     * @param pos position of the Element that we want to delete
+     * elimina un elemento en el tablero
+     * @param pos arreglo que contiene la posicion del elemento que se desea borrar del tablero en la forma de {y,x}
      */
     public void deleteElement(int[] pos){
         if (elements[pos[0]][pos[1]] instanceof Food){
@@ -183,9 +196,9 @@ public class Board {
     }
 
     /**
-     * add new part in the Snake
-     * @param y position y of the Snake
-     * @param x position x of the Snake
+     * añade una parte de una serpiente en el tablero
+     * @param y posicion en y en donde se desea añadir
+     * @param x posicion en x en donde se desea añadir
      */
     public void addSnakePart(int y, int x){
         SnakePart snakePart = new SnakePart(y,x);
@@ -205,8 +218,8 @@ public class Board {
     public boolean isSnake(int y, int x){ return elements[y][x] instanceof SnakePart; }
 
     /**
-     * read the the actual board
-     * @return a new board with diferent values
+     * lee el tablero
+     * @return retorna el tablero en forma de string.
      */
     public String[][] readBoard(){
         String[][] names = new String[length][width];
@@ -223,24 +236,37 @@ public class Board {
         return names;
     }
 
+    /**
+     * Retorna el estatus del juego.
+     * @return true si todavia no se pierde el juego, false si ya se perdió el juego.
+     */
     public boolean getStatus(){
         return game;
     }
 
+    /**
+     * Retorna los puntajes del juego.
+     * @return es un arreglo que contiene los puntajes de la siguiente forma {puntaje de jugador 1, puntaje de jugador 2}.
+     */
     public int[] getScore() {
         return score;
     }
 
+    /**
+     * Define el estatus del juego.
+     * @param game true si todavia no se pierde el juego, false si ya se perdió el juego.
+     */
     public void setGame(boolean game) {
         this.game = game;
     }
 
+    /**
+     * Metodo que nos permite definir el color de la serpiente
+     * @param color Color que queremos que sea la serpiente
+     * @param snake Serpiente a la cual deseamos cambiarle el color
+     */
     public void setSnakeColor(Color color,int snake) {
         --snake;
         snakes[snake].setColor(color);
-    }
-
-    public Color getSnakeColor() {
-        return snakes[0].getColor();
     }
 }
