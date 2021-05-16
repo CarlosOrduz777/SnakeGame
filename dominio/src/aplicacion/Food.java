@@ -1,10 +1,11 @@
 package aplicacion;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public abstract class Food implements Element{
+public class Food implements Element{
     private int x;
     private int y;
     
@@ -12,6 +13,7 @@ public abstract class Food implements Element{
         this.x = x;
         this.y = y;
     }
+
 
     @Override
     public int[] getPosition() {
@@ -24,5 +26,20 @@ public abstract class Food implements Element{
     public void setPos(int[] to) {
         y = to[0];
         x = to[1];
+    }
+
+    @Override
+    public Color getColor() {
+        return null;
+    }
+
+    @Override
+    public void setColor(Color color) {
+
+    }
+
+    @Override
+    public void eaten(Board board, Snake snake) {
+
     }
 }

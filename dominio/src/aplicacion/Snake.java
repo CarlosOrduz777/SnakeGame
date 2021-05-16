@@ -214,4 +214,6 @@ public class Snake {
     public int getDmg() {
         return dmg;
     }
+
+    
 }
