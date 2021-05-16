@@ -14,4 +14,6 @@ public interface Element {
 
     Color getColor();
     void setColor(Color color);
+
+    void eaten(Board board , Snake snake);
 }

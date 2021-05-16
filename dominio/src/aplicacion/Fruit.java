@@ -40,5 +40,10 @@ public class Fruit extends Food{
         this.color = color;
     }
 
+    @Override
+    public void eaten(Board board, Snake snake) {
+
+    }
+
     //Should be started with a random color
 }

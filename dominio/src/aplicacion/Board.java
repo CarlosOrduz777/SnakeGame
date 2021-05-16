@@ -128,7 +128,8 @@ public class Board {
         Random r2 = new Random();
         int opt = r2.nextInt(4);
         if (opt == 0) {
-            elements[y][x] = new Fruit(y, x);
+            elements[y][x] = new Fruit(y,x);
+
         }
         else if (opt == 1){
             elements[y][x] = new RainbowFruit(y,x);

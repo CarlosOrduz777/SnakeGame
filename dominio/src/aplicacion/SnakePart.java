@@ -40,4 +40,9 @@ public class SnakePart implements Element {
     public void setColor(Color color) {
         this.color = color;
     }
+
+    @Override
+    public void eaten(Board board, Snake snake) {
+
+    }
 }
