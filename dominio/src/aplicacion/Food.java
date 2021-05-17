@@ -8,7 +8,7 @@ import java.awt.*;
  * @author Felipe Giraldo
  * @version 1.0
  */
-public class Food implements Element{
+public abstract class Food implements Element{
     private int x;
     private int y;
 
@@ -55,6 +55,6 @@ public class Food implements Element{
     }
 
     @Override
-    public void eaten(Board board, Snake snake) {
+    public void eaten(Snake snake) throws SnakeException {
     }
 }

@@ -39,6 +39,8 @@ public class Board {
             snakes = new Snake[2];
             snakes[0] = new Snake(0,0,this);
             snakes[1] = new Snake(9,9,this);
+            snakes[0].setOtherSnake(snakes[1]);
+            snakes[1].setOtherSnake(snakes[0]);
             generateFood();
             generateFood();
         }
@@ -170,6 +172,13 @@ public class Board {
     }
 
     /**
+     * Genera una sorpresa aleatoria cada cierto tiempo en el tablero
+     */
+    public void generateSurprise(){
+
+    }
+
+    /**
      * cambia la posición de un elemento en el tablero
      * @param element Elemento que se desea mover
      * @param to posición a la cual se va a mover el elementos
@@ -206,14 +215,6 @@ public class Board {
     }
 
     public Element getElement(int y, int x){return elements[y][x];}
-
-    public boolean isFruit(int y, int x){ return elements[y][x] instanceof Fruit; }
-
-    public boolean isRainbowFruit(int y, int x){ return elements[y][x] instanceof RainbowFruit; }
-
-    public boolean isCandy(int y, int x){ return elements[y][x] instanceof Candy; }
-
-    public boolean isPoison(int y, int x){ return elements[y][x] instanceof Poison; }
 
     public boolean isSnake(int y, int x){ return elements[y][x] instanceof SnakePart; }
 

@@ -47,4 +47,13 @@ public class Poison extends Food {
     public void setColor(Color color) {
         this.color = color;
     }
+
+    /**
+     * @see super.eaten()
+     * @param snake
+     */
+    @Override
+    public void eaten(Snake snake) throws SnakeException {
+        throw new SnakeException(SnakeException.GAME_OVER);
+    }
 }

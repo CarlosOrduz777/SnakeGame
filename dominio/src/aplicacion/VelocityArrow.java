@@ -8,7 +8,7 @@ public class VelocityArrow extends Surprise {
     }
 
     @Override
-    public void eaten(Board board, Snake[] snakes) {
+    public void eaten(Snake snake) throws SnakeException {
 
     }
 }

@@ -73,7 +73,8 @@ public class SnakePart implements Element {
     }
 
     @Override
-    public void eaten(Board board, Snake snake) {
+    public void eaten( Snake snake) throws SnakeException {
+        throw new SnakeException(SnakeException.GAME_OVER);
 
     }
 }

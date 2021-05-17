@@ -25,5 +25,5 @@ public interface Element {
     void setPos(int[] to);
     Color getColor();
     void setColor(Color color);
-    void eaten(Board board , Snake snake);
+    void eaten(Snake snake) throws SnakeException;
 }

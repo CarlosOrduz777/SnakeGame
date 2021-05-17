@@ -65,9 +65,15 @@ public class Fruit extends Food{
     }
 
     @Override
-    public void eaten(Board board, Snake snake) {
-
+    public void eaten(Snake snake) {
+        if (getColor().getRGB() == snake.getColor().getRGB()){
+            snake.eat(getPosition(),2);
+            snake.setScore(snake.getScore()+2);
+        }
+        else {
+            snake.eat(getPosition(),1);
+            snake.setScore(snake.getScore()+1);
+        }
     }
 
-    //Should be started with a random color
 }

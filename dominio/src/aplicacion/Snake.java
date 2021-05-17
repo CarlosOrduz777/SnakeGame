@@ -23,6 +23,8 @@ public class Snake {
     private int[] tail;
     private int score = 0;
     private int damage = 0;
+    private int velocity;
+    private Snake otherSnake;
 
     /**
      * Constructor del objeto serpiente en el tablero y con 3 de longitud, si la serpiente se genera en una posicion
@@ -33,6 +35,7 @@ public class Snake {
      */
     public Snake(int y,int x, Board board){
         this.board = board;
+        this.velocity = 1;
         if(x ==9){
             for (int x1 = x-2; x1 <= x; x1++) {
                 board.addSnakePart(y, x1);
@@ -60,12 +63,28 @@ public class Snake {
         move();
     }
 
+    public void setOtherSnake(Snake otherSnake) {
+        this.otherSnake = otherSnake;
+    }
+
+    public Snake getOtherSnake() {
+        return otherSnake;
+    }
+
     /**
      * Retorna el puntaje de la serpiente
      * @return puntaje de la serpiente
      */
     public int getScore(){
         return score;
+    }
+
+    /**
+     * Actualiza el score a un nuevo valor
+     * @param score
+     */
+    public void setScore(int score){
+        this.score = score;
     }
 
     /**
@@ -170,7 +189,7 @@ public class Snake {
                 check(to,from);
             }
         }
-        catch (ArrayIndexOutOfBoundsException e){
+        catch (ArrayIndexOutOfBoundsException | SnakeException e){
             board.setGame(false);
         }
     }
@@ -180,7 +199,7 @@ public class Snake {
      * @param to elemento que se va a eliminar
      * @param times cantidad de partes pendientes de la serpiente
      */
-    private void eat(int[] to, int times){
+    public void eat(int[] to, int times){
         tail = parts.get(parts.size()-1).getPosition();
         board.deleteElement(to);
         pendingParts += times;
@@ -223,36 +242,11 @@ public class Snake {
      * @param inFront elemento que vamos a analizar
      * @param snakeHead posicion de la cabeza de la serpiente
      */
-    private void check (int[] inFront,int[] snakeHead){
-        if (board.isFruit(inFront[0], inFront[1])) {
-            if (board.getElement(inFront[0],inFront[1]).getColor().getRGB() == color.getRGB()){
-                eat(inFront,2);
-                score += 2;
-            }
-            else {
-                eat(inFront,1);
-                score += 1;
-            }
+    private void check (int[] inFront,int[] snakeHead) throws SnakeException {
+        if(board.getElement(inFront[0],inFront[1])!= null) {
+            board.getElement(inFront[0], inFront[1]).eaten(this);
         }
-        else if(board.isRainbowFruit(inFront[0],inFront[1])){
-            eat(inFront,3);
-            score += 3;
-        }
-        else if(board.isCandy(inFront[0],inFront[1])) {
-            if (board.getElement(inFront[0], inFront[1]).getColor().getRGB() == color.getRGB()) {
-                damage += 2;
-                board.deleteElement(inFront);
-            } else {
-                damage += 1;
-                board.deleteElement(inFront);
-            }
-        }else if(board.isPoison(inFront[0],inFront[1])){
-            throw new ArrayIndexOutOfBoundsException();
-        }
-        else if (board.isSnake(inFront[0],inFront[1])){
-            throw new ArrayIndexOutOfBoundsException();
-        }
-        moveParts(inFront,snakeHead);
+        moveParts(inFront, snakeHead);
     }
 
     /**
@@ -295,6 +289,15 @@ public class Snake {
         return damage;
     }
 
+    /**
+     * Actualiza el damage
+     * @param damage
+     */
+    public void setDamage(int damage) {
+        this.damage = damage;
+    }
 
-
+    public Board getBoard() {
+        return board;
+    }
 }

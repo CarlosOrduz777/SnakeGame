@@ -84,4 +84,10 @@ public class RainbowFruit extends Food {
             default -> color = Color.WHITE;
         }
     }
+
+    @Override
+    public void eaten(Snake snake) {
+        snake.eat(getPosition(),3);
+        snake.setScore(snake.getScore() + 3);
+    }
 }
