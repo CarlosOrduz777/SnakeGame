@@ -1,25 +1,23 @@
 package aplicacion;
 
 import java.awt.*;
-import java.util.Random;
-import java.util.TimerTask;
 
-public abstract class Surprise implements Element{
-
+public class Wall implements Element{
+    private final String name = "w";
     private int x;
     private int y;
-    private Color color = new Color(179, 0, 71);
+    private Color color;
 
-    public Surprise(int x, int y){
-        this.x = x;
+    public Wall (int x, int y){
         this.y = y;
+        this.x = x;
+        setColor(new Color(166, 166, 166));
     }
 
     @Override
     public int[] getPosition() {
         return new int[]{y, x};
     }
-
 
     @Override
     public void setPos(int[] to) {
@@ -34,14 +32,16 @@ public abstract class Surprise implements Element{
 
     @Override
     public void setColor(Color color) {
-        this.color = color;
+
     }
 
     @Override
     public void eaten(Snake snake) throws SnakeException {
-        snake.addSurpirse(this);
+        throw new SnakeException(SnakeException.GAME_OVER);
     }
 
-    public abstract void use(Snake snake);
-
+    @Override
+    public String getName() {
+        return name;
+    }
 }

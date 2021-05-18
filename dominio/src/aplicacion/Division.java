@@ -1,18 +1,24 @@
 package aplicacion;
 
-import java.awt.*;
 
 public class Division extends Surprise{
-
     public Division(int x, int y) {
         super(x, y);
-        setTimeDuration(30);
-        setColor(new Color(102, 255, 255));
+    }
+
+    @Override
+    public void use(Snake snake) {
+        snake.getOtherSnake().shorten(snake.getOtherSnake().getScore()/2);
+    }
+
+    @Override
+    public String getName() {
+        return "Division";
     }
 
     @Override
     public void eaten(Snake snake) throws SnakeException {
-        snake.setDamage(snake.getOtherSnake().getScore()/2);
+        super.eaten(snake);
+        snake.setSurpriseName(getName());
     }
-
 }

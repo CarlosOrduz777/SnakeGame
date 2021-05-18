@@ -24,7 +24,9 @@ public class Snake {
     private int score = 0;
     private int damage = 0;
     private int velocity;
+    private Surprise surprise;
     private Snake otherSnake;
+    private String surpriseName = "Ninguna";
 
     /**
      * Constructor del objeto serpiente en el tablero y con 3 de longitud, si la serpiente se genera en una posicion
@@ -38,7 +40,7 @@ public class Snake {
         this.velocity = 1;
         if(x ==9){
             for (int x1 = x-2; x1 <= x; x1++) {
-                board.addSnakePart(y, x1);
+                board.addSnakePart(y, x1,parts.size());
                 parts.add((SnakePart) board.getElement(y, x1));
             }
             head = parts.get(0);
@@ -53,14 +55,14 @@ public class Snake {
                 x = x - 2;
             }
             for (int x1 = x; x1 >= (x - 2); x1--) {
-                board.addSnakePart(y, x1);
+                board.addSnakePart(y, x1,parts.size());
                 parts.add((SnakePart) board.getElement(y, x1));
             }
             head = parts.get(0);
             head.setColor(new Color(0, 153, 51));
             setRight();
         }
-        move();
+        tail = parts.get(parts.size()-1).getPosition();
     }
 
     public void setOtherSnake(Snake otherSnake) {
@@ -194,6 +196,7 @@ public class Snake {
         }
     }
 
+
     /**
      * Se encarga de eliminar un elemento del tablero y agregar la cantidad de partes pendientes por generar
      * @param to elemento que se va a eliminar
@@ -224,6 +227,9 @@ public class Snake {
      * @param from posicion en donde estuvo la cabeza
      */
     private void moveParts(int[] to, int[] from){
+        if (board.getElement(to[0],to[1]) != null){
+            board.deleteElement(to);
+        }
         board.changeElementPos(head, to);
         to[0] = from[0];
         to[1] = from[1];
@@ -254,7 +260,7 @@ public class Snake {
      */
     public void updateParts(){
         if (pendingParts > 0) {
-            board.addSnakePart(tail[0], tail[1]);
+            board.addSnakePart(tail[0], tail[1],parts.size());
             parts.add((SnakePart) board.getElement(tail[0], tail[1]));
             setColor(color);
             pendingParts--;
@@ -299,5 +305,48 @@ public class Snake {
 
     public Board getBoard() {
         return board;
+    }
+
+    public void addSurpirse(Surprise surprise){
+        this.surprise = surprise;
+    }
+
+    public void setPendingParts(int pendingParts) {
+        this.pendingParts = pendingParts;
+    }
+
+    public char getDirection(){
+        if(isLeft()){
+            return 'l';
+        }
+        else if (isRight()){
+            return 'r';
+        }
+        else if (isDown()){
+            return 'd';
+        }
+        else {
+            return 'u';
+        }
+    }
+
+    public void useSurprise(){
+        if (surprise != null){
+            surprise.use(this);
+            surprise = null;
+            surpriseName = "Ninguna";
+        }
+    }
+
+    public int[] getHeadPos(){
+        return head.getPosition();
+    }
+
+    public void setSurpriseName(String surpriseName) {
+        this.surpriseName = surpriseName;
+    }
+
+    public String getSurpriseName(){
+        return surpriseName;
     }
 }
