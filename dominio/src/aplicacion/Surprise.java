@@ -80,7 +80,6 @@ public abstract class Surprise implements Element{
             case 9 -> color = Color.RED;
             default -> color = Color.WHITE;
         }
-
     }
 
 
