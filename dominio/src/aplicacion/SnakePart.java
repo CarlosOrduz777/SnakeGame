@@ -13,15 +13,17 @@ public class SnakePart implements Element {
     Color color = Color.GREEN;
     private int x;
     private int y;
+    private int position;
 
     /**
      * Constructor del elemento snakePart
      * @param y posicion y en el tablero
      * @param x posicion x en el tablero
      */
-    public SnakePart(int y, int x){
+    public SnakePart(int y, int x, int position){
         this.x = x;
         this.y = y;
+        this.position = position;
     }
 
     /**
@@ -77,4 +79,9 @@ public class SnakePart implements Element {
         throw new SnakeException(SnakeException.GAME_OVER);
 
     }
+
+    public int getIndex(){
+        return position;
+    }
+
 }

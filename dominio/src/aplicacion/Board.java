@@ -20,6 +20,7 @@ public class Board {
     boolean game = true;
     int[] score = {0,0};
     int foodOnScreen =0;
+    int surpriseOnScreen =0;
     private Timer timer;
 
     /**
@@ -34,6 +35,7 @@ public class Board {
             Random r = new Random();
             snakes = new Snake[1];
             snakes[0] = new Snake(r.nextInt(length), r.nextInt(width), this);
+            snakes[0].setOtherSnake(snakes[0]);
             generateFood();
         }else if(players == 2){
             snakes = new Snake[2];
@@ -62,14 +64,42 @@ public class Board {
             while (foodOnScreen < 2){
                 generateFood();
             }
+            if (surpriseOnScreen < 1){
+                surpriseOnScreen += 1;
+                Random r = new Random();
+                int time = r.nextInt(10)+1;
+                timer = new Timer();
+                TimerTask turno = new TimerTask() {
+                    @Override
+                    public void run() {
+                        generateSurprise();
+                    }
+                };
+                timer.schedule(turno, time * 2000);
+            }
         }
         else {
+            snakes[0].shorten(snakes[0].getDamage());
             snakes[0].move();
             snakes[0].updateParts();
             setScore(1);
             if (foodOnScreen < 1) {
                 generateFood();
             }
+            if (surpriseOnScreen < 1){
+                surpriseOnScreen += 1;
+                Random r = new Random();
+                int time = r.nextInt(10)+1;
+                timer = new Timer();
+                TimerTask turno = new TimerTask() {
+                    @Override
+                    public void run() {
+                        generateSurprise();
+                    }
+                };
+                timer.schedule(turno, time * 2000);
+            }
+
         }
     }
 
@@ -80,16 +110,33 @@ public class Board {
      */
     public void move (char direction){
         if (direction == 'u'){
-            snakes[0].setUp();
+            if (!snakes[0].isDown()) {
+                snakes[0].setUp();
+            }
         }
         else if (direction == 'r'){
-            snakes[0].setRight();
+            if (!snakes[0].isLeft()){
+                snakes[0].setRight();
+            }
         }
         else if (direction == 'd'){
-            snakes[0].setDown();
+            if (!snakes[0].isUp()){
+                snakes[0].setDown();
+            }
         }
         else if (direction == 'l'){
-            snakes[0].setLeft();
+            if (!snakes[0].isRight()){
+                snakes[0].setLeft();
+            }
+        }
+    }
+
+    public void use(int player){
+        if (player == 1){
+            snakes[0].useSurprise();
+        }
+        else {
+            snakes[1].useSurprise();
         }
     }
 
@@ -100,16 +147,24 @@ public class Board {
      */
     public void move2 (char direction){
         if (direction == 'u'){
-            snakes[1].setUp();
+            if (!snakes[1].isDown()) {
+                snakes[1].setUp();
+            }
         }
         else if (direction == 'r'){
-            snakes[1].setRight();
+            if (!snakes[1].isLeft()){
+                snakes[1].setRight();
+            }
         }
         else if (direction == 'd'){
-            snakes[1].setDown();
+            if (!snakes[1].isUp()){
+                snakes[1].setDown();
+            }
         }
         else if (direction == 'l'){
-            snakes[1].setLeft();
+            if (!snakes[1].isRight()){
+                snakes[1].setLeft();
+            }
         }
     }
 
@@ -136,7 +191,7 @@ public class Board {
         Random r = new Random();
         int y = r.nextInt(length);
         int x = r.nextInt(width);
-        while (elements[y][x] instanceof SnakePart){
+        while (elements[y][x] != null){
             y = r.nextInt(length);
             x = r.nextInt(width);
         }
@@ -171,12 +226,30 @@ public class Board {
         timer.schedule(turno, 12000);
     }
 
+    public void generateSurprise(){
+        Random r = new Random();
+        int y = r.nextInt(length);
+        int x = r.nextInt(width);
+        while (elements[y][x] != null){
+            y = r.nextInt(length);
+            x = r.nextInt(width);
+        }
+        Random r2 = new Random();
+        int opt = r2.nextInt(3);
+        if (opt == 0) {
+            elements[y][x] = new Division(y,x);
+        }
+        else if (opt == 1){
+            elements[y][x] = new TrapWall(y,x);
+        }
+        else {
+            elements[y][x] = new FireStar(y, x);
+        }
+    }
+
     /**
      * Genera una sorpresa aleatoria cada cierto tiempo en el tablero
      */
-    public void generateSurprise(){
-
-    }
 
     /**
      * cambia la posición de un elemento en el tablero
@@ -201,6 +274,9 @@ public class Board {
         if (elements[pos[0]][pos[1]] instanceof Food){
             foodOnScreen -= 1;
         }
+        if (elements[pos[0]][pos[1]] instanceof Surprise){
+            surpriseOnScreen -= 1;
+        }
         elements[pos[0]][pos[1]] = null;
     }
 
@@ -209,8 +285,8 @@ public class Board {
      * @param y posicion en y en donde se desea añadir
      * @param x posicion en x en donde se desea añadir
      */
-    public void addSnakePart(int y, int x){
-        SnakePart snakePart = new SnakePart(y,x);
+    public void addSnakePart(int y, int x,int position){
+        SnakePart snakePart = new SnakePart(y,x,position);
         elements[y][x] = snakePart;
     }
 
@@ -269,5 +345,19 @@ public class Board {
     public void setSnakeColor(Color color,int snake) {
         --snake;
         snakes[snake].setColor(color);
+    }
+
+    public void addElement(int y, int x, Element element){
+        elements[y][x] = element;
+    }
+
+    public String[] getSorpresa(){
+        if (snakes.length < 2){
+            return new String[]{snakes[0].getSurpriseName()};
+        }
+        else {
+            return new String[]{snakes[0].getSurpriseName(), snakes[1].getSurpriseName()};
+        }
+
     }
 }
