@@ -195,23 +195,35 @@ public class SnakeGUI extends JFrame implements ActionListener, KeyListener {
     }
 
     private void jugarAccion() {
+        String[] names = new String[2];
         pausa = false;
         game = new Game(players,false);
+        game.pause();
         if (players == 1){
             nombre1 = JOptionPane.showInputDialog("Escribe tu nombre");
+            names[0] = nombre1;
+            game.setNames(names);
             JColorChooser sel = new JColorChooser();
             Color color = sel.showDialog(null, "Seleccione un color", Color.GREEN);
+            while (Color.BLACK.getRGB() == color.getRGB()){
+                JOptionPane.showMessageDialog(null, "Seleccione colores distintos para cada serpiente");
+                color = sel.showDialog(null, "Seleccione un color para la serpiente 1", Color.GREEN);
+
+            }
             game.getBoard().setSnakeColor(color,1);
         }
         else {
             nombre1 = JOptionPane.showInputDialog("Escriba el nombre del jugador 1");
+            names[0] = nombre1;
             JColorChooser sel = new JColorChooser();
             Color color = sel.showDialog(null, "Seleccione un color para la serpiente 1", Color.GREEN);
             game.getBoard().setSnakeColor(color,1);
             nombre2 = JOptionPane.showInputDialog("Escriba el nombre del jugador 2");
+            names[1] = nombre2;
+            game.setNames(names);
             Color color2 = sel.showDialog(null, "Seleccione un color para la serpiente 2", Color.GREEN);
             game.getBoard().setSnakeColor(color2, 2);
-            while (color.getRGB() == color2.getRGB()){
+            while ((color.getRGB() == color2.getRGB()) || (Color.BLACK.getRGB() == color2.getRGB()) || Color.BLACK.getRGB() == color.getRGB()){
                 JOptionPane.showMessageDialog(null, "Seleccione colores distintos para cada serpiente");
                 color = sel.showDialog(null, "Seleccione un color para la serpiente 1", Color.GREEN);
                 game.getBoard().setSnakeColor(color,1);
@@ -231,7 +243,6 @@ public class SnakeGUI extends JFrame implements ActionListener, KeyListener {
                public void run() {
                    if (!pausa) {
                        refresque();
-                       game.getBoard().turnS(players);
                        if (!game.getBoard().getStatus()) {
                            timer.cancel();
                            timer.purge();
@@ -248,10 +259,13 @@ public class SnakeGUI extends JFrame implements ActionListener, KeyListener {
                            JOptionPane.showMessageDialog(null, "GAME OVER");
                        }
                        refresque();
+                   }else{
+                       game.pause();
                    }
                }
            };
-           timer.schedule(turno, 0, 1000);
+           timer.schedule(turno, 0, 200);
+           game.resume();
     }
 
     private void abrirAccion() {
@@ -259,7 +273,11 @@ public class SnakeGUI extends JFrame implements ActionListener, KeyListener {
         int opcion = fileChooser.showOpenDialog(abrir);
         if (opcion == JFileChooser.APPROVE_OPTION) {
             File file = fileChooser.getSelectedFile();
-            JOptionPane.showMessageDialog(null, "La funcionalidad de abrir esta en construccion, por lo tanto el archivo: " + file.getName() + " No se puede abrir");
+            try {
+                this.game = game.open(file);
+            } catch (ClassNotFoundException | SnakeException classNotFoundException) {
+                classNotFoundException.printStackTrace();
+            }
         }
     }
 
@@ -268,7 +286,11 @@ public class SnakeGUI extends JFrame implements ActionListener, KeyListener {
         int opcion = fileChooser.showSaveDialog(null);
         if (opcion == JFileChooser.APPROVE_OPTION) {
             File file = fileChooser.getSelectedFile();
-            //JOptionPane.showMessageDialog(null, "La funcionalidad de salvar esta en construccion, por lo tanto el archivo: " + file.getName() + " No se puede abrir");
+            try {
+                this.game.save(file);
+            } catch (SnakeException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -299,10 +321,10 @@ public class SnakeGUI extends JFrame implements ActionListener, KeyListener {
             }
         }
         if (players == 1){
-            score.setText("Score de" + " " + nombre1 +" "+ game.getBoard().getScore()[0]+" Sorpresa de" + " "+ nombre1 + " " + game.getBoard().getSorpresa()[0]);
+            score.setText("Score de" + " " + game.getNames()[0] +" "+ game.getBoard().getScore()[0]+", Sorpresa de" + " "+ game.getNames()[0] + " " + game.getBoard().getSorpresa()[0]);
         }
         else {// " Sorpresa de" + " "+ nombre + " " + game.getBoard().getSorpresa()[]
-            score.setText("Score de" + " " + nombre1 +" "+ game.getBoard().getScore()[0]+ " Sorpresa de" + " "+ nombre1 + " " + game.getBoard().getSorpresa()[0]+ "; "+"Score de" + " " + nombre2 +" "+ game.getBoard().getScore()[1]+ " Sorpresa de" + " "+ nombre2 + " " + game.getBoard().getSorpresa()[1]);
+            score.setText("Score de" + " " + game.getNames()[0] +" "+ game.getBoard().getScore()[0]+ ", Sorpresa de" + " "+ game.getNames()[0] + " " + game.getBoard().getSorpresa()[0]+ "; "+"Score de" + " " + game.getNames()[1] +" "+ game.getBoard().getScore()[1]+ ", Sorpresa de" + " "+ game.getNames()[1] + " " + game.getBoard().getSorpresa()[1]);
         }
         add(juego);
         repaint();
@@ -326,6 +348,11 @@ public class SnakeGUI extends JFrame implements ActionListener, KeyListener {
         int key = e.getKeyCode();
         if (e.VK_P == key){
             pausa = !pausa;
+            if(pausa){
+                game.pause();
+            }else {
+                game.resume();
+            }
         }
         if (e.VK_UP == key){
             game.getBoard().move('u');

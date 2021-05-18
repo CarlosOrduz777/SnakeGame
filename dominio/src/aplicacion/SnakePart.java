@@ -8,7 +8,7 @@ import java.awt.*;
  * @author Felipe Giraldo
  * @version 1.0
  */
-public class SnakePart implements Element {
+public class SnakePart implements Element,java.io.Serializable {
     String name = "s";
     Color color = Color.GREEN;
     private int x;

@@ -4,7 +4,7 @@ import java.awt.*;
 import java.util.Random;
 import java.util.TimerTask;
 
-public abstract class Surprise implements Element{
+public abstract class Surprise implements Element,java.io.Serializable{
 
     private int x;
     private int y;
@@ -38,7 +38,7 @@ public abstract class Surprise implements Element{
     }
 
     @Override
-    public void eaten(Snake snake) throws SnakeException {
+    public void eaten(Snake snake) {
         snake.addSurpirse(this);
     }
 

@@ -1,6 +1,7 @@
 package aplicacion;
 
 import java.awt.*;
+import java.util.Arrays;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -11,7 +12,7 @@ import java.util.TimerTask;
  * @author Felipe Giraldo
  * @version 1.0
  */
-public class Board {
+public class Board implements java.io.Serializable{
 
     Snake[] snakes;
     int length;
@@ -22,12 +23,15 @@ public class Board {
     int foodOnScreen =0;
     int surpriseOnScreen =0;
     private Timer timer;
+    private TimerTask task;
+    private int players;
 
     /**
      * Constructor de la clase board, inicializa un tablero con un tamaño fijo
      * @param players es la cantidad de jugadores que van a jugar snake
      */
     public Board (int players) {
+        this.players = players;
         length = 10;
         width = 10;
         elements = new Element[length][width];
@@ -54,12 +58,14 @@ public class Board {
      */
     public void turnS (int players){
         if (players == 2) {
+            snakes[0].setTemporaryScore(snakes[0].getScore());
+            snakes[1].setTemporaryScore(snakes[1].getScore());
             snakes[1].shorten(snakes[0].getDamage());
-            snakes[0].shorten(snakes[1].getDamage());
-            snakes[0].move();
-            snakes[0].updateParts();
-            snakes[1].move();
+            snakes[0].shorten(snakes[1].getDamage());//Acorta la serpiente
+            snakes[0].updateParts();// Mira las partes pendiente de la serpiente y las añade de una en una
             snakes[1].updateParts();
+            snakes[0].updateVelocity();
+            snakes[1].updateVelocity();
             setScore(2);
             while (foodOnScreen < 2){
                 generateFood();
@@ -79,9 +85,10 @@ public class Board {
             }
         }
         else {
+            snakes[0].setTemporaryScore(snakes[0].getScore());
             snakes[0].shorten(snakes[0].getDamage());
-            snakes[0].move();
             snakes[0].updateParts();
+            snakes[0].updateVelocity();
             setScore(1);
             if (foodOnScreen < 1) {
                 generateFood();
@@ -136,7 +143,7 @@ public class Board {
             snakes[0].useSurprise();
         }
         else {
-            snakes[1].useSurprise();
+            snakes[player-1].useSurprise();
         }
     }
 
@@ -235,15 +242,14 @@ public class Board {
             x = r.nextInt(width);
         }
         Random r2 = new Random();
-        int opt = r2.nextInt(3);
-        if (opt == 0) {
-            elements[y][x] = new Division(y,x);
-        }
-        else if (opt == 1){
-            elements[y][x] = new TrapWall(y,x);
-        }
-        else {
-            elements[y][x] = new FireStar(y, x);
+        int opt = r2.nextInt(2);
+        switch (opt) {
+            //case 0 -> elements[y][x] = new Division(y, x);
+            //case 1 -> elements[y][x] = new TrapWall(y, x);
+            //case 2 -> elements[y][x] = new FireStar(y, x);
+            //case 3 -> elements[y][x] = new Lupa(y,x);
+            case 0 -> elements[y][x] = new IncreaseVelocityArrow(y,x);
+            default -> elements[y][x] = new DecreaseVelocityArrow(y, x);
         }
     }
 
@@ -359,5 +365,39 @@ public class Board {
             return new String[]{snakes[0].getSurpriseName(), snakes[1].getSurpriseName()};
         }
 
+    }
+
+    public void pause(){
+        for (Snake s: snakes){
+            s.pause();
+        }
+        if(timer!=null) {
+            timer.cancel();
+            timer.purge();
+            timer = null;
+        }
+    }
+    public void resume(){
+        for(Snake s: snakes){
+            s.resume();
+        }
+        runnable();
+    }
+    /**
+     * Actualiza el estado de la serpiente constantemente teniendo en cuenta el refresco de la GUI
+     */
+    public void runnable(){
+        timer = new Timer();
+        task = new TimerTask() {
+            @Override
+            public void run() {
+                turnS(players);
+                String[][] board = readBoard();
+                for (String[] line: board) {
+                    System.out.println(Arrays.toString(line));
+                }
+            }
+        };
+        timer.schedule(task,0,1000);
     }
 }

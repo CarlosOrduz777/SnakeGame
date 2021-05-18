@@ -26,7 +26,7 @@ public class TrapWall extends Surprise{
         return "Trap Wall";
     }
 
-    public void eaten(Snake snake) throws SnakeException {
+    public void eaten(Snake snake){
         super.eaten(snake);
         snake.setSurpriseName(getName());
     }

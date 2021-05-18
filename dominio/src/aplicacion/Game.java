@@ -1,13 +1,24 @@
 package aplicacion;
 
+import java.io.*;
+import java.sql.SQLOutput;
+import java.sql.Time;
+import java.util.Arrays;
+import java.util.Timer;
+import java.util.TimerTask;
+
 /**
  * Clase que construye el juego SnOOPe modificacion del juego snake.
  * @author Carlos Orduz
  * @author Felipe Giraldo
  * @version 1.0
  */
-public class Game{
-    Board board;
+public class Game implements java.io.Serializable{
+    private Board board;
+    private String[] names = new String[2];
+    private Timer timer;
+    private TimerTask task;
+
 
     /**
      * Construye un tablero
@@ -16,6 +27,7 @@ public class Game{
      */
     public Game (int players, boolean bot) {
         board = new Board(players);
+        runnable();
     }
 
     /**
@@ -24,5 +36,78 @@ public class Game{
      */
     public Board getBoard(){
         return board;
+    }
+
+    /**
+     * Guarda el estado actual del juego
+     * @param file juego que se desea guardar
+     */
+    public void save(File file) throws SnakeException {
+        try {
+            if (!file.getName().contains(".dat")){
+                throw new SnakeException(SnakeException.NO_ES_DAT);
+            }
+            if(file.exists()){
+                throw new SnakeException(SnakeException.YA_EXISTE);
+            }
+            ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(file));
+            out.writeObject(this);
+            out.close();
+        }
+        catch (IOException e){
+            System.out.println(e.getMessage()+"     "+ Arrays.toString(e.getStackTrace()));
+        }
+    }
+
+    /**
+     * Abre un juego de SnakeGame
+     * @param file el archivo que se desea abrir
+     */
+    public Game open(File file) throws ClassNotFoundException, SnakeException {
+        try {
+            if (!file.getName().contains(".dat")){
+                throw new SnakeException(SnakeException.NO_ES_DAT_IN);
+            }
+            if (!file.exists()){
+                throw new SnakeException(SnakeException.NO_EXISTE);
+            }
+            ObjectInputStream in = new ObjectInputStream(new FileInputStream(file));
+            Game game = (Game) in.readObject();
+            in.close();
+            return game;
+        }
+        catch (IOException e){
+            throw new SnakeException(SnakeException.ABRIR);
+        }
+    }
+    public void pause(){
+        board.pause();
+        if(timer!=null) {
+            timer.cancel();
+            timer.purge();
+            timer = null;
+        }
+    }
+    public void resume(){
+        board.resume();
+        runnable();
+    }
+   public void setNames(String[] names){
+        this.names = names;
+   }
+
+    public String[] getNames() {
+        return names;
+    }
+
+    /**
+     * Actualiza el estado de la serpiente constantemente teniendo en cuenta el refresco de la GUI
+     */
+    public void runnable(){
+        board.runnable();
+    }
+
+    public static void main(String ...args) {
+
     }
 }

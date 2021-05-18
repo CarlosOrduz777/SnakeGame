@@ -2,6 +2,8 @@ package aplicacion;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Clase que construye y manipula una serpiente del juego SnOOPe, modificacion del juego snake
@@ -9,7 +11,7 @@ import java.util.ArrayList;
  * @author Felipe Giraldo
  * @version 1.0
  */
-public class Snake {
+public class Snake implements java.io.Serializable{
 
     private final Board board;
     private SnakePart head;
@@ -22,11 +24,16 @@ public class Snake {
     private int pendingParts = 0;
     private int[] tail;
     private int score = 0;
+    private int temporaryScore = 0;
     private int damage = 0;
-    private int velocity;
+    private double velocity;
     private Surprise surprise;
     private Snake otherSnake;
     private String surpriseName = "Ninguna";
+    private boolean allowToeat = true;
+    private Timer timer;
+    private TimerTask timerTask;
+    private double lastVelocity;
 
     /**
      * Constructor del objeto serpiente en el tablero y con 3 de longitud, si la serpiente se genera en una posicion
@@ -38,6 +45,7 @@ public class Snake {
     public Snake(int y,int x, Board board){
         this.board = board;
         this.velocity = 1;
+        this.lastVelocity = 1;
         if(x ==9){
             for (int x1 = x-2; x1 <= x; x1++) {
                 board.addSnakePart(y, x1,parts.size());
@@ -63,6 +71,7 @@ public class Snake {
             setRight();
         }
         tail = parts.get(parts.size()-1).getPosition();
+        runSnake();
     }
 
     public void setOtherSnake(Snake otherSnake) {
@@ -348,5 +357,64 @@ public class Snake {
 
     public String getSurpriseName(){
         return surpriseName;
+    }
+
+    public void setAllowToeat(boolean allowToeat) {
+        this.allowToeat = allowToeat;
+    }
+    public boolean getAllowToEat(){
+        return this.allowToeat;
+    }
+
+    /**
+     * Construye los timers para que la serpiente se mueva cada cierto tiempo
+     */
+    public void runSnake(){
+        timer = new Timer();
+        timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                move();
+            }
+        };
+        timer.schedule(timerTask,0, (long) (velocity* 1000l));
+    }
+    public void updateVelocity(){
+        if(temporaryScore < score && score % 5==0){
+            this.velocity *= 1.5;
+            pause();
+            resume();
+        }else if(velocity != lastVelocity){
+            pause();
+            resume();
+        }
+    }
+
+    public void pause(){
+        if(timer != null) {
+            timer.cancel();
+            timer.purge();
+            timer = null;
+        }
+    }
+    public void resume(){
+        runSnake();
+    }
+
+    public void setTemporaryScore(int temporaryScore) {
+        this.temporaryScore = temporaryScore;
+    }
+
+    public void setVelocity(double velocity) {
+        this.lastVelocity = this.velocity;
+        this.velocity = velocity;
+    }
+
+    public double getVelocity() {
+        return velocity;
+    }
+
+    public double getLastVelocity() {
+        return lastVelocity;
     }
 }

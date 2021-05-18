@@ -21,7 +21,7 @@ public class FireStar extends Surprise{
         return "Fire Star";
     }
 
-    public void eaten(Snake snake) throws SnakeException {
+    public void eaten(Snake snake) {
         super.eaten(snake);
         snake.setSurpriseName(getName());
     }

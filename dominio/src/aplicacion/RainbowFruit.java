@@ -87,7 +87,12 @@ public class RainbowFruit extends Food {
 
     @Override
     public void eaten(Snake snake) {
-        snake.eat(getPosition(),3);
-        snake.setScore(snake.getScore() + 3);
+        if(snake.getAllowToEat()) {
+            snake.eat(getPosition(), 3);
+            snake.setScore(snake.getScore() + 3);
+        }else{
+            snake.setAllowToeat(true);
+            snake.eat(getPosition(), 0);
+        }
     }
 }

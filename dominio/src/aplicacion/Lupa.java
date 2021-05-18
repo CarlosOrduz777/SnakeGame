@@ -1,24 +1,25 @@
 package aplicacion;
 
+import java.util.Random;
 
-public class Division extends Surprise{
-    public Division(int x, int y) {
+public class Lupa extends Surprise{
+    public Lupa(int x, int y) {
         super(x, y);
     }
 
     @Override
     public void use(Snake snake) {
-        snake.getOtherSnake().shorten(snake.getOtherSnake().getScore()/2);
+        snake.getOtherSnake().setAllowToeat(false);
     }
 
     @Override
     public String getName() {
-        return "Division";
+        return "Lupa";
     }
 
-    @Override
-    public void eaten(Snake snake) {
+    public void eaten(Snake snake){
         super.eaten(snake);
         snake.setSurpriseName(getName());
     }
+
 }

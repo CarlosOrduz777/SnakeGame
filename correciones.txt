@@ -1,6 +1,12 @@
--Limitar los colores(serpiente)(por ahora no)
--Sorpresas y comidas (Flechas de velocidad).
+-Sorpresas (Flechas de velocidad).
+-Arreglar Runnable
 -Mostrar el numero de sorpresas usadas por cada jugador
--Mostrar la sorpresa en reserva de cada jugador
--Corregir los instanceOf.
+-Refactorizar estrella de fuego
+-Por alguna razón division no funciona
 -Reducir la velocidad cuando el tamaño de la serpiente sea multiplo de 5 (ni idea como hacer esto)(tal vez creando un timer para cada serpiente)
+-Corregir los instanceOf.
+-Revisar refactorizacion de deleteFood...
+
+
+
+

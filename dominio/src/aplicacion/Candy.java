@@ -52,12 +52,17 @@ public class Candy extends Fruit{
 
     @Override
     public void eaten(Snake snake) {
-        if (getColor().getRGB() == snake.getColor().getRGB()) {
-            snake.setDamage(snake.getDamage()+2);
-            snake.getBoard().deleteElement(getPosition());
-        } else {
-            snake.setDamage(snake.getDamage()+1);
-            snake.getBoard().deleteElement(getPosition());
+        if(snake.getAllowToEat()) {
+            if (getColor().getRGB() == snake.getColor().getRGB()) {
+                snake.setDamage(snake.getDamage() + 2);
+                snake.getBoard().deleteElement(getPosition());
+            } else {
+                snake.setDamage(snake.getDamage() + 1);
+                snake.getBoard().deleteElement(getPosition());
+            }
+        }else{
+            snake.setAllowToeat(true);
+            snake.eat(getPosition(), 0);
         }
     }
 }

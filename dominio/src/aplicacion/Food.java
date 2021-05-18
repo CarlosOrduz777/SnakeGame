@@ -8,7 +8,7 @@ import java.awt.*;
  * @author Felipe Giraldo
  * @version 1.0
  */
-public abstract class Food implements Element{
+public abstract class Food implements Element,java.io.Serializable{
     private int x;
     private int y;
 
@@ -56,5 +56,6 @@ public abstract class Food implements Element{
 
     @Override
     public void eaten(Snake snake) throws SnakeException {
+
     }
 }

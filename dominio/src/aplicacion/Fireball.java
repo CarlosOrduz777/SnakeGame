@@ -4,7 +4,7 @@ import java.awt.*;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class Fireball implements Element{
+public class Fireball implements Element, java.io.Serializable{
     private int y,x;
     private String name = "fb";
     private Board board;

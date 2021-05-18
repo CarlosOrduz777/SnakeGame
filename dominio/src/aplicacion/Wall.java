@@ -2,7 +2,7 @@ package aplicacion;
 
 import java.awt.*;
 
-public class Wall implements Element{
+public class Wall implements Element, java.io.Serializable{
     private final String name = "w";
     private int x;
     private int y;

@@ -54,6 +54,11 @@ public class Poison extends Food {
      */
     @Override
     public void eaten(Snake snake) throws SnakeException {
-        throw new SnakeException(SnakeException.GAME_OVER);
+        if(snake.getAllowToEat()) {
+            throw new SnakeException(SnakeException.GAME_OVER);
+        }else{
+            snake.setAllowToeat(true);
+            snake.eat(getPosition(), 0);
+        }
     }
 }
