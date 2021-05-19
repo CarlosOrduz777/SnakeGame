@@ -71,7 +71,6 @@ public class Snake implements java.io.Serializable{
             setRight();
         }
         tail = parts.get(parts.size()-1).getPosition();
-        runSnake();
     }
 
     public void setOtherSnake(Snake otherSnake) {
@@ -377,17 +376,9 @@ public class Snake implements java.io.Serializable{
                 move();
             }
         };
-        timer.schedule(timerTask,0, (long) (velocity* 1000l));
+        timer.schedule(timerTask,0, 1000);
     }
     public void updateVelocity(){
-        if(temporaryScore < score && score % 5==0){
-            this.velocity *= 1.5;
-            pause();
-            resume();
-        }else if(velocity != lastVelocity){
-            pause();
-            resume();
-        }
     }
 
     public void pause(){
@@ -396,14 +387,12 @@ public class Snake implements java.io.Serializable{
             timer.purge();
             timer = null;
         }
+
     }
     public void resume(){
         runSnake();
     }
 
-    public void setTemporaryScore(int temporaryScore) {
-        this.temporaryScore = temporaryScore;
-    }
 
     public void setVelocity(double velocity) {
         this.lastVelocity = this.velocity;

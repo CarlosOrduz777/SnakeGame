@@ -16,8 +16,6 @@ import java.util.TimerTask;
 public class Game implements java.io.Serializable{
     private Board board;
     private String[] names = new String[2];
-    private Timer timer;
-    private TimerTask task;
 
 
     /**
@@ -27,7 +25,6 @@ public class Game implements java.io.Serializable{
      */
     public Game (int players, boolean bot) {
         board = new Board(players);
-        runnable();
     }
 
     /**
@@ -82,11 +79,6 @@ public class Game implements java.io.Serializable{
     }
     public void pause(){
         board.pause();
-        if(timer!=null) {
-            timer.cancel();
-            timer.purge();
-            timer = null;
-        }
     }
     public void resume(){
         board.resume();
@@ -100,6 +92,7 @@ public class Game implements java.io.Serializable{
         return names;
     }
 
+
     /**
      * Actualiza el estado de la serpiente constantemente teniendo en cuenta el refresco de la GUI
      */
@@ -108,6 +101,20 @@ public class Game implements java.io.Serializable{
     }
 
     public static void main(String ...args) {
-
+        Game game = new Game(1,false);
+        Timer timer = new Timer();
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                if (!game.getBoard().getStatus()){
+                    System.exit(0);
+                }
+                String[][] board = game.getBoard().readBoard();
+                for (String[] line: board) {
+                    System.out.println(Arrays.toString(line));
+                }
+            }
+        };
+        timer.schedule(task,0,1000);
     }
 }

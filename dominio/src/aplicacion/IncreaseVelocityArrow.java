@@ -12,17 +12,15 @@ public class IncreaseVelocityArrow extends Surprise {
     }
 
     public void use(Snake snake) {
+        snake.getOtherSnake().setVelocity(snake.getOtherSnake().getVelocity()*0.75);
         Timer timer = new Timer();
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
-                snake.getOtherSnake().setVelocity(1.0);
-                snake.getBoard().pause();
-                snake.getBoard().resume();
+                snake.getOtherSnake().setVelocity(snake.getOtherSnake().getLastVelocity());
             }
         };
         timer.schedule(task,5000);
-        snake.getOtherSnake().setVelocity(snake.getOtherSnake().getVelocity()*0.5);
     }
 
     @Override

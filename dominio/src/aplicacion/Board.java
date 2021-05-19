@@ -24,6 +24,9 @@ public class Board implements java.io.Serializable{
     int surpriseOnScreen =0;
     private Timer timer;
     private TimerTask task;
+    private Timer timerFruit;
+    private Timer timerSurprise;
+
     private int players;
 
     /**
@@ -54,12 +57,9 @@ public class Board implements java.io.Serializable{
 
     /**
      * Metodo que actualiza el tablero, mueve la serpiente y genera los elementos en un turno.
-     * @param players la cantidad de jugadores que estan jugando snake.
      */
-    public void turnS (int players){
+    public void turnS () {
         if (players == 2) {
-            snakes[0].setTemporaryScore(snakes[0].getScore());
-            snakes[1].setTemporaryScore(snakes[1].getScore());
             snakes[1].shorten(snakes[0].getDamage());
             snakes[0].shorten(snakes[1].getDamage());//Acorta la serpiente
             snakes[0].updateParts();// Mira las partes pendiente de la serpiente y las añade de una en una
@@ -74,7 +74,7 @@ public class Board implements java.io.Serializable{
                 surpriseOnScreen += 1;
                 Random r = new Random();
                 int time = r.nextInt(10)+1;
-                timer = new Timer();
+                timerSurprise = new Timer();
                 TimerTask turno = new TimerTask() {
                     @Override
                     public void run() {
@@ -85,7 +85,6 @@ public class Board implements java.io.Serializable{
             }
         }
         else {
-            snakes[0].setTemporaryScore(snakes[0].getScore());
             snakes[0].shorten(snakes[0].getDamage());
             snakes[0].updateParts();
             snakes[0].updateVelocity();
@@ -97,7 +96,7 @@ public class Board implements java.io.Serializable{
                 surpriseOnScreen += 1;
                 Random r = new Random();
                 int time = r.nextInt(10)+1;
-                timer = new Timer();
+                timerSurprise = new Timer();
                 TimerTask turno = new TimerTask() {
                     @Override
                     public void run() {
@@ -106,7 +105,6 @@ public class Board implements java.io.Serializable{
                 };
                 timer.schedule(turno, time * 2000);
             }
-
         }
     }
 
@@ -218,7 +216,7 @@ public class Board implements java.io.Serializable{
             elements[y][x] = new Poison(y,x);
         }
         foodOnScreen +=1;
-        timer = new Timer();
+        Timer timerFruit = new Timer();
         int finalY = y;
         int finalX = x;
         TimerTask turno = new TimerTask() {
@@ -230,7 +228,7 @@ public class Board implements java.io.Serializable{
                 }
             }
         };
-        timer.schedule(turno, 12000);
+        timerFruit.schedule(turno, 12000);
     }
 
     public void generateSurprise(){
@@ -278,10 +276,14 @@ public class Board implements java.io.Serializable{
      */
     public void deleteElement(int[] pos){
         if (elements[pos[0]][pos[1]] instanceof Food){
-            foodOnScreen -= 1;
+            if (foodOnScreen > 0){
+                foodOnScreen -= 1;
+            }
         }
         if (elements[pos[0]][pos[1]] instanceof Surprise){
-            surpriseOnScreen -= 1;
+            if (surpriseOnScreen > 0){
+                surpriseOnScreen -= 1;
+            }
         }
         elements[pos[0]][pos[1]] = null;
     }
@@ -369,7 +371,9 @@ public class Board implements java.io.Serializable{
 
     public void pause(){
         for (Snake s: snakes){
-            s.pause();
+            if (s != null){
+                s.pause();
+            }
         }
         if(timer!=null) {
             timer.cancel();
@@ -379,25 +383,25 @@ public class Board implements java.io.Serializable{
     }
     public void resume(){
         for(Snake s: snakes){
-            s.resume();
+            if (s != null){
+                s.resume();
+            }
         }
         runnable();
     }
     /**
      * Actualiza el estado de la serpiente constantemente teniendo en cuenta el refresco de la GUI
      */
-    public void runnable(){
+    public void runnable (){
+        snakes[0].runSnake();
         timer = new Timer();
         task = new TimerTask() {
             @Override
             public void run() {
-                turnS(players);
-                String[][] board = readBoard();
-                for (String[] line: board) {
-                    System.out.println(Arrays.toString(line));
-                }
+                turnS();
             }
         };
         timer.schedule(task,0,1000);
     }
+
 }
