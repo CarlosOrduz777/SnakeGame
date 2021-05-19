@@ -27,7 +27,6 @@ public class Game implements java.io.Serializable{
      */
     public Game (int players, boolean bot) {
         board = new Board(players);
-        runnable();
     }
 
     /**
@@ -80,18 +79,7 @@ public class Game implements java.io.Serializable{
             throw new SnakeException(SnakeException.ABRIR);
         }
     }
-    public void pause(){
-        board.pause();
-        if(timer!=null) {
-            timer.cancel();
-            timer.purge();
-            timer = null;
-        }
-    }
-    public void resume(){
-        board.resume();
-        runnable();
-    }
+
    public void setNames(String[] names){
         this.names = names;
    }
@@ -104,10 +92,22 @@ public class Game implements java.io.Serializable{
      * Actualiza el estado de la serpiente constantemente teniendo en cuenta el refresco de la GUI
      */
     public void runnable(){
-        board.runnable();
+        Timer timer = new Timer();
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                String[][] boardS = board.readBoard();
+                for (String[] line: boardS){
+                    System.out.println(Arrays.toString(line));
+                }
+                board.turnS();
+            }
+        };
+        timer.schedule(task,0,1000);
     }
 
     public static void main(String ...args) {
-
+        Game game = new Game(1,false);
+        game.runnable();
     }
 }

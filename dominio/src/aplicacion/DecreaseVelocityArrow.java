@@ -7,7 +7,7 @@ public class DecreaseVelocityArrow extends Surprise{
     public DecreaseVelocityArrow(int x, int y) {
         super(x, y);
     }
-
+    /**
     public void use(Snake snake) {
         Timer timer = new Timer();
         TimerTask task = new TimerTask() {
@@ -21,6 +21,7 @@ public class DecreaseVelocityArrow extends Surprise{
         timer.schedule(task,5000);
         snake.getOtherSnake().setVelocity(snake.getOtherSnake().getVelocity()*1.5);
     }
+     **/
 
     @Override
     public String getName() {
@@ -30,5 +31,10 @@ public class DecreaseVelocityArrow extends Surprise{
     public void eaten(Snake snake){
         super.eaten(snake);
         snake.setSurpriseName(getName());
+    }
+
+    @Override
+    public void use(Snake snake) {
+
     }
 }
