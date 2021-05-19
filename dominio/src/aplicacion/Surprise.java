@@ -37,6 +37,10 @@ public abstract class Surprise implements Element,java.io.Serializable{
         this.color = color;
     }
 
+    /**
+     * La sorpresa al ser consumida es asignada a la serpiente que la consumio
+     * @param snake serpiente que consumio la sorpresa
+     */
     @Override
     public void eaten(Snake snake) {
         snake.addSurpirse(this);

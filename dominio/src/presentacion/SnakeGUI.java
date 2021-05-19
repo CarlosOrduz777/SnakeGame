@@ -10,6 +10,12 @@ import java.util.TimerTask;
 
 import aplicacion.*;
 
+/**
+ * Clase que construye y manipula la interfaz grafica del juego sNOOpe
+ * @author Carlos Orduz
+ * @author Felipe Giraldo
+ * @version 1.0
+ */
 public class SnakeGUI extends JFrame implements ActionListener, KeyListener {
 
     private JMenuBar menuBar;
@@ -35,11 +41,17 @@ public class SnakeGUI extends JFrame implements ActionListener, KeyListener {
     private boolean pausa;
     private TimerTask turno;
 
+    /**
+     * Constructor de la interfaz en donde preparamos los elementos graficos y las acciones
+     */
     private SnakeGUI() {
         this.prepareElementos();
         this.prepareAcciones();
     }
 
+    /**
+     * metodo en la que se preparan los elementos graficos, el tamaño de la ventana y su posición.
+     */
     private void prepareElementos() {
         setTitle("SnakeGame");
         Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
@@ -51,9 +63,10 @@ public class SnakeGUI extends JFrame implements ActionListener, KeyListener {
 
     }
 
-
+    /**
+     * metodo en donde se preparan los elementos del menu principal
+     */
     private void prepareElementosPrincipal() {
-        setPreferredSize(new Dimension(800,600));
         setResizable(false);
         fondo = new JLabel();
         fondo.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("snake.jpg"))));
@@ -91,6 +104,9 @@ public class SnakeGUI extends JFrame implements ActionListener, KeyListener {
         principal.add(grillaBotones, BorderLayout.SOUTH);
     }
 
+    /**
+     * metodo en donde se preparan los elementos del menu
+     */
     private void prepareElementosMenu() {
         menuBar = new JMenuBar();
         setJMenuBar(menuBar);
@@ -108,6 +124,9 @@ public class SnakeGUI extends JFrame implements ActionListener, KeyListener {
         menu.add(salir);
     }
 
+    /**
+     * metodo en la que se preparan inicialmente los elementos del tablero
+     */
     private void prepareElementosTablero() {
         juego = new JPanel();
         addKeyListener(this);
@@ -138,6 +157,9 @@ public class SnakeGUI extends JFrame implements ActionListener, KeyListener {
         add(juego);
     }
 
+    /**
+     * metodo que prepara las acciones posibles a realizar desde la interface
+     */
     private void prepareAcciones() {
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
@@ -150,17 +172,26 @@ public class SnakeGUI extends JFrame implements ActionListener, KeyListener {
         prepareJugarAcciones();
     }
 
+    /**
+     * metodo que prepara las acciones que se realizan en el menu principal
+     */
     private void prepareMenuPrincipalAcciones() {
         jugar.addActionListener(this);
         botonJugadores[0].addActionListener(this);
         botonJugadores[1].addActionListener(this);
     }
 
+    /**
+     * metodo que prepara las acciones que se realizan al jugar
+     */
     private void prepareJugarAcciones() {
         menuPrincipal.addActionListener(this);
 
     }
 
+    /**
+     * metodoq que prepara las acciones que se realizan en el menu
+     */
     private void prepareMenuAcciones() {
         salir.addActionListener(this);
         abrir.addActionListener(this);
@@ -168,6 +199,10 @@ public class SnakeGUI extends JFrame implements ActionListener, KeyListener {
         menu.addActionListener(this);
     }
 
+    /**
+     * Metodo que detecta si un action event sucede y realiza la accion correspondiente a ese action event
+     * @param e Action event correspondiente a la accion que se quiere realizar
+     */
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == salir) {
             close();
@@ -186,6 +221,9 @@ public class SnakeGUI extends JFrame implements ActionListener, KeyListener {
         }
     }
 
+    /**
+     * Metodo que ejecuta la accion menu principal, en esta actualizamos el jframe para volver al menu principal
+     */
     private void menuPrincipalAccion() {
         game.getBoard().setGame(false);
         remove(juego);
@@ -196,10 +234,15 @@ public class SnakeGUI extends JFrame implements ActionListener, KeyListener {
         revalidate();
     }
 
+    /**
+     * Metodo que ejecuta la accion jugar, en esta iniciamos un juego con las configuraciones realizadas y creamos
+     * el timer responsable de la ejecucion concurrente del juego y de actualizar los componentes graficos por medio
+     * de refresque
+     */
     private void jugarAccion() {
         String[] names = new String[2];
         pausa = false;
-        game = new Game(players, false);
+        game = new Game(players);
         if (players == 1) {
             nombre1 = JOptionPane.showInputDialog("Escribe tu nombre");
             names[0] = nombre1;
@@ -263,6 +306,10 @@ public class SnakeGUI extends JFrame implements ActionListener, KeyListener {
         timer.schedule(turno, 0, 1000);
     }
 
+    /**
+     * Metodo que ejecuta la accion abrir, nos permite abrir un archivo .dat que contiene los datos guardados de una
+     * partida
+     */
     private void abrirAccion() {
         JFileChooser fileChooser = new JFileChooser();
         int opcion = fileChooser.showOpenDialog(abrir);
@@ -276,6 +323,9 @@ public class SnakeGUI extends JFrame implements ActionListener, KeyListener {
         }
     }
 
+    /**
+     * Metodo que ejecuta la accion salvar, nos permite guardar una partida como .dat
+     */
     private void salvarAccion() {
         JFileChooser fileChooser = new JFileChooser();
         int opcion = fileChooser.showSaveDialog(null);
@@ -289,12 +339,18 @@ public class SnakeGUI extends JFrame implements ActionListener, KeyListener {
         }
     }
 
+    /**
+     * Metodo que ejecuta la accion close, termina la ejecucion del programa
+     */
     private void close() {
         if (JOptionPane.showConfirmDialog(rootPane, "Desea terminar el programa?", "Salir", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
             System.exit(0);
         }
     }
 
+    /**
+     * Metodo encargado de actualizar los elementos en el tablero de juego.
+     */
     private void refresque() {
         remove(juego);
         repaint();
@@ -335,6 +391,10 @@ public class SnakeGUI extends JFrame implements ActionListener, KeyListener {
 
     }
 
+    /**
+     * Metodo que detecta si un key event sucede y realiza la accion correspondiente a ese key event
+     * @param e Action event correspondiente a la accion que se quiere realizar
+     */
     @Override
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();

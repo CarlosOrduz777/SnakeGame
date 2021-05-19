@@ -74,12 +74,21 @@ public class SnakePart implements Element,java.io.Serializable {
         this.color = color;
     }
 
+    /**
+     * Al ser comida por una serpiente da game over
+     * @param snake serpiente que comio la snakePArt
+     * @throws SnakeException fin del juego
+     */
     @Override
     public void eaten( Snake snake) throws SnakeException {
         throw new SnakeException(SnakeException.GAME_OVER);
 
     }
 
+    /**
+     * Indice correspondiente a la posicion de la articulación en la serpiente
+     * @return numero correspondiente a la posicion de la articulación en la serpiente
+     */
     public int getIndex(){
         return position;
     }

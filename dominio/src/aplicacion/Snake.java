@@ -14,7 +14,7 @@ import java.util.TimerTask;
 public class Snake implements java.io.Serializable{
 
     private final Board board;
-    private SnakePart head;
+    private final SnakePart head;
     private boolean left;
     private boolean right;
     private boolean up;
@@ -66,6 +66,10 @@ public class Snake implements java.io.Serializable{
         tail = parts.get(parts.size()-1).getPosition();
     }
 
+    /**
+     * Nos permite almacenar la otra serpiente en la pantalla
+     * @param otherSnake otra serpiente en la pantalla
+     */
     public void setOtherSnake(Snake otherSnake) {
         this.otherSnake = otherSnake;
     }
@@ -84,7 +88,6 @@ public class Snake implements java.io.Serializable{
 
     /**
      * Actualiza el score a un nuevo valor
-     * @param score
      */
     public void setScore(int score){
         this.score = score;
@@ -282,7 +285,6 @@ public class Snake implements java.io.Serializable{
 
     /**
      * Metodo que nos devuelve el color del cuerpo de la serpiente
-     * @return
      */
     public Color getColor(){
         return color;
@@ -298,24 +300,39 @@ public class Snake implements java.io.Serializable{
 
     /**
      * Actualiza el damage
-     * @param damage
      */
     public void setDamage(int damage) {
         this.damage = damage;
     }
 
+
+    /**
+     * @return tablero en donde esta la serpiente
+     */
     public Board getBoard() {
         return board;
     }
 
+    /**
+     * Nos permite asignarle una sorpresa a una serpiente
+     * @param surprise sorpresa que queremos asignar a una serpiente
+     */
     public void addSurpirse(Surprise surprise){
         this.surprise = surprise;
     }
 
+    /**
+     * Nos permite asignar las partes pendientes de una serpiente
+     * @param pendingParts partes pendientes de una serpiente
+     */
     public void setPendingParts(int pendingParts) {
         this.pendingParts = pendingParts;
     }
 
+    /**
+     * nos retorna la direccion de la serpiente
+     * @return direccionde la serpiente
+     */
     public char getDirection(){
         if(isLeft()){
             return 'l';
@@ -331,6 +348,9 @@ public class Snake implements java.io.Serializable{
         }
     }
 
+    /**
+     * Nos permite utilizar la sorpresa que tiene una serpiente almacenada
+     */
     public void useSurprise(){
         if (surprise != null){
             surprise.use(this);
@@ -339,21 +359,40 @@ public class Snake implements java.io.Serializable{
         }
     }
 
+    /**
+     * Nos da la posicion de la cabeza de la serpiente
+     * @return posiciond de la cabeza de la serpiente en forma {y,x}
+     */
     public int[] getHeadPos(){
         return head.getPosition();
     }
 
+    /**
+     * Nos permite guardar el nombre de la sorpresa que tiene una serpiente
+     * @param surpriseName nombre de la sorpresa que tiene una serpiente
+     */
     public void setSurpriseName(String surpriseName) {
         this.surpriseName = surpriseName;
     }
 
+    /**
+     * @return nombre de la sorpresa de una serpiente
+     */
     public String getSurpriseName(){
         return surpriseName;
     }
 
+    /**
+     * Nos permite asignar un valor booleano que nos dice si una serpiente puede comer o no
+     * @param allowToeat true si puede comer, false de lo contrario
+     */
     public void setAllowToeat(boolean allowToeat) {
         this.allowToeat = allowToeat;
     }
+
+    /**
+     * @return true si puede comer, false de lo contrario
+     */
     public boolean getAllowToEat(){
         return this.allowToeat;
     }

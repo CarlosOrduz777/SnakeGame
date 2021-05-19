@@ -3,11 +3,21 @@ package aplicacion;
 import java.awt.*;
 import java.util.Random;
 
+/**
+ * Clase que construlle la sorpresa trap wall
+ * @author Carlos Orduz
+ * @author Felipe Giraldo
+ * @version 1.0
+ */
 public class TrapWall extends Surprise{
     public TrapWall(int x, int y) {
         super(x, y);
     }
 
+    /**
+     * Al ser utilizada construlle en una posición aleatoria un muro
+     * @param snake serpiente que utiliza la sorpresa
+     */
     @Override
     public void use(Snake snake) {
         Random r = new Random();

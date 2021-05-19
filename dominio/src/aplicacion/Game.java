@@ -1,8 +1,6 @@
 package aplicacion;
 
 import java.io.*;
-import java.sql.SQLOutput;
-import java.sql.Time;
 import java.util.Arrays;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -14,18 +12,15 @@ import java.util.TimerTask;
  * @version 1.0
  */
 public class Game implements java.io.Serializable{
-    private Board board;
+    private final Board board;
     private String[] names = new String[2];
-    private Timer timer;
-    private TimerTask task;
 
 
     /**
      * Construye un tablero
      * @param players numero de jugadores
-     * @param bot si se desea o no un bot
      */
-    public Game (int players, boolean bot) {
+    public Game(int players) {
         board = new Board(players);
     }
 
@@ -107,7 +102,7 @@ public class Game implements java.io.Serializable{
     }
 
     public static void main(String ...args) {
-        Game game = new Game(1,false);
+        Game game = new Game(1);
         game.runnable();
     }
 }

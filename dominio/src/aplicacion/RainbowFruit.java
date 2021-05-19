@@ -85,6 +85,10 @@ public class RainbowFruit extends Food {
         }
     }
 
+    /**
+     * Al ser consumida por una serpiente aumenta en 3 el tamaño de la serpiente que lo come
+     * @param snake
+     */
     @Override
     public void eaten(Snake snake) {
         if(snake.getAllowToEat()) {
