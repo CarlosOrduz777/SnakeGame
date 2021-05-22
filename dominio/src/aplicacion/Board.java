@@ -385,4 +385,10 @@ public class Board implements java.io.Serializable{
 
     }
 
+    public void pause(){
+        timer.cancel();
+        timer.purge();
+        timer = null;
+    }
+
 }

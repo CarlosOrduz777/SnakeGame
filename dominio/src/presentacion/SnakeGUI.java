@@ -246,11 +246,11 @@ public class SnakeGUI extends JFrame implements ActionListener, KeyListener {
             names[0] = nombre1;
             game.setNames(names);
             JColorChooser sel = new JColorChooser();
-            Color color = sel.showDialog(null, "Seleccione un color", Color.GREEN);
+            Color color = JColorChooser.showDialog(null, "Seleccione un color", Color.GREEN);
             while (Color.BLACK.getRGB() == color.getRGB()) {
                 JOptionPane.showMessageDialog(null, "No puede seleccionar ese color");
                 sel = new JColorChooser();
-                color = sel.showDialog(null, "Seleccione un color", Color.GREEN);
+                color = JColorChooser.showDialog(null, "Seleccione un color", Color.GREEN);
             }
             game.getBoard().setSnakeColor(color, 1);
         } else {
@@ -336,6 +336,7 @@ public class SnakeGUI extends JFrame implements ActionListener, KeyListener {
             } catch (SnakeException e) {
                 e.printStackTrace();
             }
+
         }
     }
 
@@ -400,6 +401,9 @@ public class SnakeGUI extends JFrame implements ActionListener, KeyListener {
         int key = e.getKeyCode();
         if (e.VK_P == key) {
             pausa = !pausa;
+            if (pausa){
+                game.pause();
+            }
         }
         else if (e.VK_UP == key) {
             game.getBoard().move('u');
