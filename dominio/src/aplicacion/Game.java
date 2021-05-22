@@ -101,6 +101,10 @@ public class Game implements java.io.Serializable{
         timer.schedule(task,0,1000);
     }
 
+    public void pause(){
+        board.pause();
+    }
+
     public static void main(String ...args) {
         Game game = new Game(1);
         game.runnable();
