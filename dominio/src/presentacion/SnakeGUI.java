@@ -293,8 +293,6 @@ public class SnakeGUI extends JFrame implements ActionListener, KeyListener {
                                 JOptionPane.showMessageDialog(null, "GANA EL JUGADOR 1!");
                             } else if (points[0] < points[1]) {
                                 JOptionPane.showMessageDialog(null, "GANA EL JUGADOR 2!");
-                            } else {
-                                JOptionPane.showMessageDialog(null, "EMPATE!");
                             }
                         }
                         JOptionPane.showMessageDialog(null, "GAME OVER");
