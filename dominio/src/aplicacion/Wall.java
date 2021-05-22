@@ -2,6 +2,12 @@ package aplicacion;
 
 import java.awt.*;
 
+/**
+ * Clase que construlle un muro
+ * @author Carlos Orduz
+ * @author Felipe Giraldo
+ * @version 1.0
+ */
 public class Wall implements Element, java.io.Serializable{
     private final String name = "w";
     private int x;
@@ -35,6 +41,11 @@ public class Wall implements Element, java.io.Serializable{
 
     }
 
+    /**
+     * Al ser comido el muro genera un game over
+     * @param snake Serpiente que comio el muro
+     * @throws SnakeException fin del juego
+     */
     @Override
     public void eaten(Snake snake) throws SnakeException {
         throw new SnakeException(SnakeException.GAME_OVER);

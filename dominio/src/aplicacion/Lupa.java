@@ -7,6 +7,10 @@ public class Lupa extends Surprise{
         super(x, y);
     }
 
+    /**
+     * Al usarse esta sorpresa impide que otra serpiente coma
+     * @param snake
+     */
     @Override
     public void use(Snake snake) {
         snake.getOtherSnake().setAllowToeat(false);

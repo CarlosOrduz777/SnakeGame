@@ -4,6 +4,13 @@ import java.awt.*;
 import java.util.Timer;
 import java.util.TimerTask;
 
+/**
+ * Clase que crea el objeto fireball, que se mueve en una direccion y si choca con algo tiene distintos
+ * comportamientos
+ * @author Carlos Orduz
+ * @author Felipe Giraldo
+ * @version 1.0
+ */
 public class Fireball implements Element, java.io.Serializable{
     private int y,x;
     private String name = "fb";
@@ -12,6 +19,13 @@ public class Fireball implements Element, java.io.Serializable{
     private Color color;
     private Timer timer;
 
+    /**
+     * Metodo constructor de la bola de fuego, que determina su dirección, y posicion en un tablero de juego
+     * @param y posicion en y en donde aparecera la bola de fuego
+     * @param x posicion en x en donde aparecera la bola de fuego
+     * @param board Tablero en donde aparecera la bola de fuego
+     * @param snake Serpiente que aparecio la bola de fuego
+     */
     public Fireball(int y, int x, Board board, Snake snake){
         char direction =snake.getDirection();
         if (direction == 'd') {
@@ -41,6 +55,7 @@ public class Fireball implements Element, java.io.Serializable{
         timer.schedule(turno, 0,1000);
     }
 
+
     @Override
     public int[] getPosition() {
         return new int[]{y, x};
@@ -62,6 +77,11 @@ public class Fireball implements Element, java.io.Serializable{
         this.color = color;
     }
 
+    /**
+     * metodo que se ejecuta al ser comido por una serpiente
+     * @param snake serpiente que comio la bola de fuego
+     * @throws SnakeException vota la excepcion game over que es el fin del juego
+     */
     @Override
     public void eaten(Snake snake) throws SnakeException {
         throw new SnakeException(SnakeException.GAME_OVER);
@@ -72,6 +92,10 @@ public class Fireball implements Element, java.io.Serializable{
         return name;
     }
 
+    /**
+     * metodo que hace que la bola de fuego se mueva en una direccion
+     * @param direction direccion hacia la cual se va a mover la bola de fuego
+     */
     public void move(char direction) {
         try {
             if (direction == 'd') {
@@ -110,6 +134,11 @@ public class Fireball implements Element, java.io.Serializable{
         }
     }
 
+    /**
+     * metodo que verifica que hay delante de la bola de fuego y dependiendo de esto da como resultado un comportamiento
+     * @param inFront posicion al frente de la bola de fuego
+     * @param fireball posicion de la bola de fuego
+     */
     public void check(int[] inFront, int[] fireball){
         if(board.getElement(inFront[0],inFront[1])!= null) {
             if(board.getElement(inFront[0], inFront[1]) instanceof Food){

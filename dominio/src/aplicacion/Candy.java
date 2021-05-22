@@ -1,7 +1,6 @@
 package aplicacion;
 
 import java.awt.*;
-import java.util.Random;
 
 /**
  * Clase correspondiente al alimento Candy, alimento que al consumirse quita puntos al rival, si es del mismo color que
@@ -50,16 +49,19 @@ public class Candy extends Fruit{
         this.color = color;
     }
 
+    /**
+     * Al ser consumido un dulce establece el daño que se le debe realizar a la otra serpiente
+     * @param snake serpiente que come el dulce
+     */
     @Override
     public void eaten(Snake snake) {
         if(snake.getAllowToEat()) {
             if (getColor().getRGB() == snake.getColor().getRGB()) {
                 snake.setDamage(snake.getDamage() + 2);
-                snake.getBoard().deleteElement(getPosition());
             } else {
                 snake.setDamage(snake.getDamage() + 1);
-                snake.getBoard().deleteElement(getPosition());
             }
+            snake.getBoard().deleteElement(getPosition());
         }else{
             snake.setAllowToeat(true);
             snake.eat(getPosition(), 0);

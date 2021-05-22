@@ -14,7 +14,7 @@ import java.util.TimerTask;
 public class Snake implements java.io.Serializable{
 
     private final Board board;
-    private SnakePart head;
+    private final SnakePart head;
     private boolean left;
     private boolean right;
     private boolean up;
@@ -24,16 +24,12 @@ public class Snake implements java.io.Serializable{
     private int pendingParts = 0;
     private int[] tail;
     private int score = 0;
-    private int temporaryScore = 0;
     private int damage = 0;
-    private double velocity;
     private Surprise surprise;
     private Snake otherSnake;
     private String surpriseName = "Ninguna";
     private boolean allowToeat = true;
-    private Timer timer;
-    private TimerTask timerTask;
-    private double lastVelocity;
+
 
     /**
      * Constructor del objeto serpiente en el tablero y con 3 de longitud, si la serpiente se genera en una posicion
@@ -44,8 +40,6 @@ public class Snake implements java.io.Serializable{
      */
     public Snake(int y,int x, Board board){
         this.board = board;
-        this.velocity = 1;
-        this.lastVelocity = 1;
         if(x ==9){
             for (int x1 = x-2; x1 <= x; x1++) {
                 board.addSnakePart(y, x1,parts.size());
@@ -56,7 +50,6 @@ public class Snake implements java.io.Serializable{
             setLeft();
         }else {
             if (x < 2) {
-                //throw the snake need at least two spaces to the left to start
                 x = 2;
             }
             if (x == board.width) {
@@ -71,9 +64,12 @@ public class Snake implements java.io.Serializable{
             setRight();
         }
         tail = parts.get(parts.size()-1).getPosition();
-        runSnake();
     }
 
+    /**
+     * Nos permite almacenar la otra serpiente en la pantalla
+     * @param otherSnake otra serpiente en la pantalla
+     */
     public void setOtherSnake(Snake otherSnake) {
         this.otherSnake = otherSnake;
     }
@@ -92,7 +88,6 @@ public class Snake implements java.io.Serializable{
 
     /**
      * Actualiza el score a un nuevo valor
-     * @param score
      */
     public void setScore(int score){
         this.score = score;
@@ -290,7 +285,6 @@ public class Snake implements java.io.Serializable{
 
     /**
      * Metodo que nos devuelve el color del cuerpo de la serpiente
-     * @return
      */
     public Color getColor(){
         return color;
@@ -306,24 +300,39 @@ public class Snake implements java.io.Serializable{
 
     /**
      * Actualiza el damage
-     * @param damage
      */
     public void setDamage(int damage) {
         this.damage = damage;
     }
 
+
+    /**
+     * @return tablero en donde esta la serpiente
+     */
     public Board getBoard() {
         return board;
     }
 
+    /**
+     * Nos permite asignarle una sorpresa a una serpiente
+     * @param surprise sorpresa que queremos asignar a una serpiente
+     */
     public void addSurpirse(Surprise surprise){
         this.surprise = surprise;
     }
 
+    /**
+     * Nos permite asignar las partes pendientes de una serpiente
+     * @param pendingParts partes pendientes de una serpiente
+     */
     public void setPendingParts(int pendingParts) {
         this.pendingParts = pendingParts;
     }
 
+    /**
+     * nos retorna la direccion de la serpiente
+     * @return direccionde la serpiente
+     */
     public char getDirection(){
         if(isLeft()){
             return 'l';
@@ -339,6 +348,9 @@ public class Snake implements java.io.Serializable{
         }
     }
 
+    /**
+     * Nos permite utilizar la sorpresa que tiene una serpiente almacenada
+     */
     public void useSurprise(){
         if (surprise != null){
             surprise.use(this);
@@ -347,74 +359,41 @@ public class Snake implements java.io.Serializable{
         }
     }
 
+    /**
+     * Nos da la posicion de la cabeza de la serpiente
+     * @return posiciond de la cabeza de la serpiente en forma {y,x}
+     */
     public int[] getHeadPos(){
         return head.getPosition();
     }
 
+    /**
+     * Nos permite guardar el nombre de la sorpresa que tiene una serpiente
+     * @param surpriseName nombre de la sorpresa que tiene una serpiente
+     */
     public void setSurpriseName(String surpriseName) {
         this.surpriseName = surpriseName;
     }
 
+    /**
+     * @return nombre de la sorpresa de una serpiente
+     */
     public String getSurpriseName(){
         return surpriseName;
     }
 
+    /**
+     * Nos permite asignar un valor booleano que nos dice si una serpiente puede comer o no
+     * @param allowToeat true si puede comer, false de lo contrario
+     */
     public void setAllowToeat(boolean allowToeat) {
         this.allowToeat = allowToeat;
     }
-    public boolean getAllowToEat(){
-        return this.allowToeat;
-    }
 
     /**
-     * Construye los timers para que la serpiente se mueva cada cierto tiempo
+     * @return true si puede comer, false de lo contrario
      */
-    public void runSnake(){
-        timer = new Timer();
-        timerTask = new TimerTask() {
-            @Override
-            public void run() {
-                move();
-            }
-        };
-        timer.schedule(timerTask,0, (long) (velocity* 1000l));
-    }
-    public void updateVelocity(){
-        if(temporaryScore < score && score % 5==0){
-            this.velocity *= 1.5;
-            pause();
-            resume();
-        }else if(velocity != lastVelocity){
-            pause();
-            resume();
-        }
-    }
-
-    public void pause(){
-        if(timer != null) {
-            timer.cancel();
-            timer.purge();
-            timer = null;
-        }
-    }
-    public void resume(){
-        runSnake();
-    }
-
-    public void setTemporaryScore(int temporaryScore) {
-        this.temporaryScore = temporaryScore;
-    }
-
-    public void setVelocity(double velocity) {
-        this.lastVelocity = this.velocity;
-        this.velocity = velocity;
-    }
-
-    public double getVelocity() {
-        return velocity;
-    }
-
-    public double getLastVelocity() {
-        return lastVelocity;
+    public boolean getAllowToEat(){
+        return this.allowToeat;
     }
 }

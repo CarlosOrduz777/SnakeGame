@@ -1,7 +1,6 @@
 package aplicacion;
 
 import java.awt.*;
-import java.util.Arrays;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -23,8 +22,7 @@ public class Board implements java.io.Serializable{
     int foodOnScreen =0;
     int surpriseOnScreen =0;
     private Timer timer;
-    private TimerTask task;
-    private int players;
+    private final int players;
 
     /**
      * Constructor de la clase board, inicializa un tablero con un tamaño fijo
@@ -54,18 +52,15 @@ public class Board implements java.io.Serializable{
 
     /**
      * Metodo que actualiza el tablero, mueve la serpiente y genera los elementos en un turno.
-     * @param players la cantidad de jugadores que estan jugando snake.
      */
-    public void turnS (int players){
+    public void turnS (){
         if (players == 2) {
-            snakes[0].setTemporaryScore(snakes[0].getScore());
-            snakes[1].setTemporaryScore(snakes[1].getScore());
             snakes[1].shorten(snakes[0].getDamage());
             snakes[0].shorten(snakes[1].getDamage());//Acorta la serpiente
             snakes[0].updateParts();// Mira las partes pendiente de la serpiente y las añade de una en una
             snakes[1].updateParts();
-            snakes[0].updateVelocity();
-            snakes[1].updateVelocity();
+            snakes[0].move();
+            snakes[1].move();
             setScore(2);
             while (foodOnScreen < 2){
                 generateFood();
@@ -85,10 +80,9 @@ public class Board implements java.io.Serializable{
             }
         }
         else {
-            snakes[0].setTemporaryScore(snakes[0].getScore());
             snakes[0].shorten(snakes[0].getDamage());
             snakes[0].updateParts();
-            snakes[0].updateVelocity();
+            snakes[0].move();
             setScore(1);
             if (foodOnScreen < 1) {
                 generateFood();
@@ -138,6 +132,10 @@ public class Board implements java.io.Serializable{
         }
     }
 
+    /**
+     * Nos permite usar la sorpresa de un jugador dado
+     * @param player jugador del cual queremos utilizar la sorpresa
+     */
     public void use(int player){
         if (player == 1){
             snakes[0].useSurprise();
@@ -233,6 +231,9 @@ public class Board implements java.io.Serializable{
         timer.schedule(turno, 12000);
     }
 
+    /**
+     * Genera una sorpresa aleatoria en el tablero,esta sorpresa puede ser Lupa, FireStar o TrapWal.
+     */
     public void generateSurprise(){
         Random r = new Random();
         int y = r.nextInt(length);
@@ -242,20 +243,15 @@ public class Board implements java.io.Serializable{
             x = r.nextInt(width);
         }
         Random r2 = new Random();
-        int opt = r2.nextInt(2);
+        int opt = r2.nextInt(4);
         switch (opt) {
-            //case 0 -> elements[y][x] = new Division(y, x);
-            //case 1 -> elements[y][x] = new TrapWall(y, x);
-            //case 2 -> elements[y][x] = new FireStar(y, x);
-            //case 3 -> elements[y][x] = new Lupa(y,x);
-            case 0 -> elements[y][x] = new IncreaseVelocityArrow(y,x);
+            case 0 -> elements[y][x] = new TrapWall(y, x);
+            case 1 -> elements[y][x] = new FireStar(y, x);
+            case 2 -> elements[y][x] = new Lupa(y,x);
+            case 3 -> elements[y][x] = new IncreaseVelocityArrow(y,x);
             default -> elements[y][x] = new DecreaseVelocityArrow(y, x);
         }
     }
-
-    /**
-     * Genera una sorpresa aleatoria cada cierto tiempo en el tablero
-     */
 
     /**
      * cambia la posición de un elemento en el tablero
@@ -296,8 +292,20 @@ public class Board implements java.io.Serializable{
         elements[y][x] = snakePart;
     }
 
+    /**
+     * Nos devuelve un elemento de una posicion en la matriz de elementos
+     * @param y posicion en y del elemento
+     * @param x posicion en x del elemento
+     * @return Elemento ubicado en la posicion y,x
+     */
     public Element getElement(int y, int x){return elements[y][x];}
 
+    /**
+     * Nos dice si un elemento en una posicion es parte de una serpiente
+     * @param y posicion en y del elemento
+     * @param x posicion en x del elemento
+     * @return Elemento ubicado en la posicion y,x
+     */
     public boolean isSnake(int y, int x){ return elements[y][x] instanceof SnakePart; }
 
     /**
@@ -353,10 +361,20 @@ public class Board implements java.io.Serializable{
         snakes[snake].setColor(color);
     }
 
+    /**
+     * Nos permite añadir un elemento en una posicion
+     * @param y posicion en y donde queremos añadir el elemento
+     * @param x posicion en x en donde queremos añadir el elemento
+     * @param element elemento que queremos añadir
+     */
     public void addElement(int y, int x, Element element){
         elements[y][x] = element;
     }
 
+    /**
+     * Nos retorna las sorpresas que tienen cada serpiente en un instante
+     * @return sorpresas que tiene cada serpiente en un arreglo de string
+     */
     public String[] getSorpresa(){
         if (snakes.length < 2){
             return new String[]{snakes[0].getSurpriseName()};
@@ -367,37 +385,4 @@ public class Board implements java.io.Serializable{
 
     }
 
-    public void pause(){
-        for (Snake s: snakes){
-            s.pause();
-        }
-        if(timer!=null) {
-            timer.cancel();
-            timer.purge();
-            timer = null;
-        }
-    }
-    public void resume(){
-        for(Snake s: snakes){
-            s.resume();
-        }
-        runnable();
-    }
-    /**
-     * Actualiza el estado de la serpiente constantemente teniendo en cuenta el refresco de la GUI
-     */
-    public void runnable(){
-        timer = new Timer();
-        task = new TimerTask() {
-            @Override
-            public void run() {
-                turnS(players);
-                String[][] board = readBoard();
-                for (String[] line: board) {
-                    System.out.println(Arrays.toString(line));
-                }
-            }
-        };
-        timer.schedule(task,0,1000);
-    }
 }
