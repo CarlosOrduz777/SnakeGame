@@ -33,7 +33,7 @@ public class SnakeGUI extends JFrame implements ActionListener, KeyListener {
     private JPanel elementos;
     private JPanel puntajes;
     private JPanel opcionesJuego;
-    private final JRadioButton[] botonJugadores = new JRadioButton[2];
+    private JRadioButton[] botonJugadores = new JRadioButton[2];
     private java.util.Timer timer;
     private Game game;
     private int players = 1;
@@ -67,7 +67,6 @@ public class SnakeGUI extends JFrame implements ActionListener, KeyListener {
      * metodo en donde se preparan los elementos del menu principal
      */
     private void prepareElementosPrincipal() {
-        setResizable(false);
         fondo = new JLabel();
         fondo.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("snake.jpg"))));
         fondo.setOpaque(false);
@@ -196,7 +195,6 @@ public class SnakeGUI extends JFrame implements ActionListener, KeyListener {
         salir.addActionListener(this);
         abrir.addActionListener(this);
         salvar.addActionListener(this);
-        menu.addActionListener(this);
     }
 
     /**
@@ -247,11 +245,12 @@ public class SnakeGUI extends JFrame implements ActionListener, KeyListener {
             nombre1 = JOptionPane.showInputDialog("Escribe tu nombre");
             names[0] = nombre1;
             game.setNames(names);
-            Color color = JColorChooser.showDialog(null, "Seleccione un color", Color.GREEN);
+            JColorChooser sel = new JColorChooser();
+            Color color = sel.showDialog(null, "Seleccione un color", Color.GREEN);
             while (Color.BLACK.getRGB() == color.getRGB()) {
                 JOptionPane.showMessageDialog(null, "No puede seleccionar ese color");
-                color = JColorChooser.showDialog(null, "Seleccione un color", Color.GREEN);
-
+                sel = new JColorChooser();
+                color = sel.showDialog(null, "Seleccione un color", Color.GREEN);
             }
             game.getBoard().setSnakeColor(color, 1);
         } else {
@@ -279,10 +278,11 @@ public class SnakeGUI extends JFrame implements ActionListener, KeyListener {
         repaint();
         revalidate();
         timer = new Timer();
-        turno = new TimerTask() {
+        TimerTask turno = new TimerTask() {
             @Override
             public void run() {
                 if (!pausa) {
+                    refresque();
                     game.getBoard().turnS();
                     if (!game.getBoard().getStatus()) {
                         timer.cancel();
@@ -398,30 +398,30 @@ public class SnakeGUI extends JFrame implements ActionListener, KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();
-        if (KeyEvent.VK_P == key) {
+        if (e.VK_P == key) {
             pausa = !pausa;
         }
-        if (KeyEvent.VK_UP == key) {
+        else if (e.VK_UP == key) {
             game.getBoard().move('u');
-        } else if (KeyEvent.VK_DOWN == key) {
+        } else if (e.VK_DOWN == key) {
             game.getBoard().move('d');
-        } else if (KeyEvent.VK_LEFT == key) {
+        } else if (e.VK_LEFT == key) {
             game.getBoard().move('l');
-        } else if (KeyEvent.VK_RIGHT == key) {
+        } else if (e.VK_RIGHT == key) {
             game.getBoard().move('r');
-        } else if (KeyEvent.VK_SPACE == key) {
+        } else if (e.VK_SPACE == key) {
             game.getBoard().use(1);
         }
         if (players == 2) {
-            if (KeyEvent.VK_W == key) {
+            if (e.VK_W == key) {
                 game.getBoard().move2('u');
-            } else if (KeyEvent.VK_S == key) {
+            } else if (e.VK_S == key) {
                 game.getBoard().move2('d');
-            } else if (KeyEvent.VK_A == key) {
+            } else if (e.VK_A == key) {
                 game.getBoard().move2('l');
-            } else if (KeyEvent.VK_D == key) {
+            } else if (e.VK_D == key) {
                 game.getBoard().move2('r');
-            } else if (KeyEvent.VK_E == key) {
+            } else if (e.VK_E == key) {
                 game.getBoard().use(2);
             }
         }
