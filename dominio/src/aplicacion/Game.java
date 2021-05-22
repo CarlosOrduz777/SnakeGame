@@ -107,7 +107,5 @@ public class Game implements java.io.Serializable{
         board.runnable();
     }
 
-    public static void main(String ...args) {
 
-    }
 }
