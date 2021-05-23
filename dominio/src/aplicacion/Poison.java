@@ -57,7 +57,7 @@ public class Poison extends Food {
         if(snake.getAllowToEat()) {
             throw new SnakeException(SnakeException.GAME_OVER);
         }else{
-            snake.setAllowToeat(true);
+            snake.setAllowToEat(true);
             snake.eat(getPosition(), 0);
         }
     }

@@ -10,8 +10,8 @@ import java.util.Random;
  * @version 1.0
  */
 public class TrapWall extends Surprise{
-    public TrapWall(int x, int y) {
-        super(x, y);
+    public TrapWall(int y, int x) {
+        super(y, x);
     }
 
     /**

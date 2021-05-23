@@ -55,8 +55,6 @@ public class Board implements java.io.Serializable{
      */
     public void turnS (){
         if (players == 2) {
-            snakes[1].shorten(snakes[0].getDamage());
-            snakes[0].shorten(snakes[1].getDamage());//Acorta la serpiente
             snakes[0].updateParts();// Mira las partes pendiente de la serpiente y las añade de una en una
             snakes[1].updateParts();
             snakes[0].move();
@@ -80,7 +78,6 @@ public class Board implements java.io.Serializable{
             }
         }
         else {
-            snakes[0].shorten(snakes[0].getDamage());
             snakes[0].updateParts();
             snakes[0].move();
             setScore(1);
@@ -248,8 +245,7 @@ public class Board implements java.io.Serializable{
             case 0 -> elements[y][x] = new TrapWall(y, x);
             case 1 -> elements[y][x] = new FireStar(y, x);
             case 2 -> elements[y][x] = new Lupa(y,x);
-            case 3 -> elements[y][x] = new IncreaseVelocityArrow(y,x);
-            default -> elements[y][x] = new DecreaseVelocityArrow(y, x);
+            default -> elements[y][x] = new Division(y, x);
         }
     }
 
@@ -386,9 +382,11 @@ public class Board implements java.io.Serializable{
     }
 
     public void pause(){
-        timer.cancel();
-        timer.purge();
-        timer = null;
+        if (timer != null){
+            timer.cancel();
+            timer.purge();
+            timer = null;
+        }
     }
 
 }
