@@ -1,7 +1,5 @@
 package aplicacion;
 
-import java.awt.*;
-
 /**
  * Clase que construye la clase de comida.
  * @author Carlos Orduz
@@ -21,8 +19,6 @@ public abstract class Food implements Element,java.io.Serializable{
         this.x = x;
         this.y = y;
     }
-
-
     /**
      * Retorna la posición de la comida.
      * @return arreglo de la forma {y, x}.
@@ -33,7 +29,6 @@ public abstract class Food implements Element,java.io.Serializable{
         pos = new int[]{y, x};
         return pos;
     }
-
     /**
      * Define la posicion de la comida a partir de un arreglo
      * @param to arreglo de la forma {y, x}.
@@ -44,18 +39,12 @@ public abstract class Food implements Element,java.io.Serializable{
         x = to[1];
     }
 
-
+    /**
+     * Metodo que es utilizado al chocarze una fireball con un alimento
+     * @param snake serpiente que lanzo la fireball
+     */
     @Override
-    public Color getColor() {
-        return null;
-    }
-
-    @Override
-    public void setColor(Color color) {
-    }
-
-    @Override
-    public void eaten(Snake snake) throws SnakeException {
-
+    public void fireballCheck(Snake snake) {
+        snake.getBoard().deleteElement(getPosition());
     }
 }

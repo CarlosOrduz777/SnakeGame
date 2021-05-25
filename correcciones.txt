@@ -1,0 +1,4 @@
+-Que al cargar entre directamente al juego, asi este en el menu principal
+-Terminar las pruebas de aceptación
+-Agregar más pruebas de unidad
+-Agregar Diagramas de secuencia

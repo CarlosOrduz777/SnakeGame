@@ -9,21 +9,12 @@ import java.awt.*;
  * @version 1.0
  */
 public interface Element {
-    String name = " ";
-    Color color = null;
 
     int[] getPosition();
-
-    /**
-     * retorna el nombre del elemento
-     * @return String con el nombre del elemento
-     */
-    default String getName(){
-        return name;
-    }
-
+    String getName();
     void setPos(int[] to);
     Color getColor();
     void setColor(Color color);
     void eaten(Snake snake) throws SnakeException;
+    void fireballCheck(Snake snake);
 }

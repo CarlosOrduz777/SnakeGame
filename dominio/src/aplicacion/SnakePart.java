@@ -85,6 +85,11 @@ public class SnakePart implements Element,java.io.Serializable {
 
     }
 
+    @Override
+    public void fireballCheck(Snake snake) {
+        snake.getOtherSnake().shorten(snake.getOtherSnake().getScore()- getIndex());
+    }
+
     /**
      * Indice correspondiente a la posicion de la articulación en la serpiente
      * @return numero correspondiente a la posicion de la articulación en la serpiente
