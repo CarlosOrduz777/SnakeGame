@@ -11,8 +11,8 @@ import java.awt.*;
 public class FireStar extends Surprise{
 
 
-    public FireStar(int x, int y) {
-        super(x, y);
+    public FireStar(int y, int x) {
+        super(y, x);
     }
 
     /**
@@ -22,7 +22,7 @@ public class FireStar extends Surprise{
     @Override
     public void use(Snake snake) {
         int[] pos = snake.getHeadPos();
-        Fireball fireball = new Fireball(pos[0],pos[1],snake.getBoard(),snake);
+        Fireball fireball = new Fireball(pos[0],pos[1],snake);
         snake.getBoard().addElement(pos[0],pos[1],fireball);
     }
 

@@ -1,10 +1,8 @@
 package aplicacion;
 
-import java.util.Random;
-
 public class Lupa extends Surprise{
-    public Lupa(int x, int y) {
-        super(x, y);
+    public Lupa(int y, int x) {
+        super(y, x);
     }
 
     /**
@@ -13,7 +11,7 @@ public class Lupa extends Surprise{
      */
     @Override
     public void use(Snake snake) {
-        snake.getOtherSnake().setAllowToeat(false);
+        snake.getOtherSnake().setAllowToEat(false);
     }
 
     @Override

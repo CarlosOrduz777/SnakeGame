@@ -2,8 +2,8 @@ package aplicacion;
 
 
 public class Division extends Surprise{
-    public Division(int x, int y) {
-        super(x, y);
+    public Division(int y, int x) {
+        super(y, x);
     }
 
     @Override

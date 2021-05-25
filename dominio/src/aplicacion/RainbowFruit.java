@@ -95,7 +95,7 @@ public class RainbowFruit extends Food {
             snake.eat(getPosition(), 3);
             snake.setScore(snake.getScore() + 3);
         }else{
-            snake.setAllowToeat(true);
+            snake.setAllowToEat(true);
             snake.eat(getPosition(), 0);
         }
     }

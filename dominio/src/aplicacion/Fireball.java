@@ -14,7 +14,6 @@ import java.util.TimerTask;
 public class Fireball implements Element, java.io.Serializable{
     private int y,x;
     private String name = "fb";
-    private Board board;
     private Snake snake;
     private Color color;
     private Timer timer;
@@ -23,10 +22,9 @@ public class Fireball implements Element, java.io.Serializable{
      * Metodo constructor de la bola de fuego, que determina su dirección, y posicion en un tablero de juego
      * @param y posicion en y en donde aparecera la bola de fuego
      * @param x posicion en x en donde aparecera la bola de fuego
-     * @param board Tablero en donde aparecera la bola de fuego
      * @param snake Serpiente que aparecio la bola de fuego
      */
-    public Fireball(int y, int x, Board board, Snake snake){
+    public Fireball(int y, int x, Snake snake){
         char direction =snake.getDirection();
         if (direction == 'd') {
             y ++;
@@ -42,7 +40,6 @@ public class Fireball implements Element, java.io.Serializable{
         }
         this.y = y;
         this.x = x;
-        this.board = board;
         this.snake = snake;
         setColor(new Color(255, 102, 0));
         timer = new Timer();
@@ -128,7 +125,7 @@ public class Fireball implements Element, java.io.Serializable{
             }
         }
         catch (ArrayIndexOutOfBoundsException ignored){
-            board.deleteElement(getPosition());
+            snake.getBoard().deleteElement(getPosition());
             timer.cancel();
             timer.purge();
         }
@@ -140,30 +137,30 @@ public class Fireball implements Element, java.io.Serializable{
      * @param fireball posicion de la bola de fuego
      */
     public void check(int[] inFront, int[] fireball){
-        if(board.getElement(inFront[0],inFront[1])!= null) {
-            if(board.getElement(inFront[0], inFront[1]) instanceof Food){
-                board.deleteElement(inFront);
-                board.deleteElement(fireball);
+        if(snake.getBoard().getElement(inFront[0],inFront[1])!= null) {
+            if(snake.getBoard().getElement(inFront[0], inFront[1]) instanceof Food){
+                snake.getBoard().deleteElement(inFront);
+                snake.getBoard().deleteElement(fireball);
                 timer.cancel();
                 timer.purge();
             }
-            else if(board.getElement(inFront[0], inFront[1]) instanceof Wall){
-                board.deleteElement(inFront);
+            else if(snake.getBoard().getElement(inFront[0], inFront[1]) instanceof Wall){
+                snake.getBoard().deleteElement(inFront);
                 snake.setPendingParts(5);
                 snake.setScore(snake.getScore()+5);
-                board.deleteElement(fireball);
+                snake.getBoard().deleteElement(fireball);
                 timer.cancel();
                 timer.purge();
             }
-            else if(board.getElement(inFront[0], inFront[1]) instanceof SnakePart){//this only analizes if the other snake is hit
-                snake.setDamage(snake.getOtherSnake().getScore()-((SnakePart) board.getElement(inFront[0], inFront[1])).getIndex());
-                board.deleteElement(fireball);
+            else if(snake.getBoard().getElement(inFront[0], inFront[1]) instanceof SnakePart){//this only analizes if the other snake is hit
+                snake.getOtherSnake().shorten(snake.getOtherSnake().getScore()-((SnakePart) snake.getBoard().getElement(inFront[0], inFront[1])).getIndex());
+                snake.getBoard().deleteElement(fireball);
                 timer.cancel();
                 timer.purge();
             }
         }
         else {
-            board.changeElementPos(this, inFront);
+            snake.getBoard().changeElementPos(this, inFront);
         }
     }
 

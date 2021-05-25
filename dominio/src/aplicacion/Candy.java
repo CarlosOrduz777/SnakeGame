@@ -20,7 +20,7 @@ public class Candy extends Fruit{
      */
     public Candy(int y, int x) {
         super(y,x);
-        color = new Color(255, 153, 255);
+        color = new Color(255, 0, 255, 206);
     }
 
     /**
@@ -57,13 +57,13 @@ public class Candy extends Fruit{
     public void eaten(Snake snake) {
         if(snake.getAllowToEat()) {
             if (getColor().getRGB() == snake.getColor().getRGB()) {
-                snake.setDamage(snake.getDamage() + 2);
+                snake.getOtherSnake().shorten(2);
             } else {
-                snake.setDamage(snake.getDamage() + 1);
+                snake.getOtherSnake().shorten(1);
             }
             snake.getBoard().deleteElement(getPosition());
         }else{
-            snake.setAllowToeat(true);
+            snake.setAllowToEat(true);
             snake.eat(getPosition(), 0);
         }
     }

@@ -2,8 +2,6 @@ package aplicacion;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * Clase que construye y manipula una serpiente del juego SnOOPe, modificacion del juego snake
@@ -24,11 +22,10 @@ public class Snake implements java.io.Serializable{
     private int pendingParts = 0;
     private int[] tail;
     private int score = 0;
-    private int damage = 0;
     private Surprise surprise;
     private Snake otherSnake;
     private String surpriseName = "Ninguna";
-    private boolean allowToeat = true;
+    private boolean allowToEat = true;
 
 
     /**
@@ -217,10 +214,12 @@ public class Snake implements java.io.Serializable{
      * @param times veces que se quiere reducir el tamaño de la serpiente
      */
     public void shorten(int times){
-        while (times >0){
+        while (score > 0 && times >0){
             tail = parts.get(parts.size() - 1).getPosition();
+            parts.remove(parts.size() - 1);
             board.deleteElement(tail);
             times--;
+            score --;
         }
     }
 
@@ -290,20 +289,6 @@ public class Snake implements java.io.Serializable{
         return color;
     }
 
-    /**
-     * Metodo que nos retorna el daño que se debe realizar a la otra serpiente
-     * @return daño que se quiere realizar a la otra serpiente
-     */
-    public int getDamage() {
-        return damage;
-    }
-
-    /**
-     * Actualiza el damage
-     */
-    public void setDamage(int damage) {
-        this.damage = damage;
-    }
 
 
     /**
@@ -384,16 +369,17 @@ public class Snake implements java.io.Serializable{
 
     /**
      * Nos permite asignar un valor booleano que nos dice si una serpiente puede comer o no
-     * @param allowToeat true si puede comer, false de lo contrario
+     * @param allowToEat true si puede comer, false de lo contrario
      */
-    public void setAllowToeat(boolean allowToeat) {
-        this.allowToeat = allowToeat;
+    public void setAllowToEat(boolean allowToEat) {
+        this.allowToEat = allowToEat;
     }
 
     /**
      * @return true si puede comer, false de lo contrario
      */
     public boolean getAllowToEat(){
-        return this.allowToeat;
+        return this.allowToEat;
     }
+
 }
