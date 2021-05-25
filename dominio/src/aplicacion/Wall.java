@@ -14,7 +14,7 @@ public class Wall implements Element, java.io.Serializable{
     private int y;
     private Color color;
 
-    public Wall (int x, int y){
+    public Wall (int y, int x){
         this.y = y;
         this.x = x;
         setColor(new Color(166, 166, 166));
@@ -49,6 +49,17 @@ public class Wall implements Element, java.io.Serializable{
     @Override
     public void eaten(Snake snake) throws SnakeException {
         throw new SnakeException(SnakeException.GAME_OVER);
+    }
+
+    /**
+     * Al ser chocado por una fireball se elimina la pared y le da 5 puntos a la serpiente que lanzo la bola de fuego.
+     * @param snake Serpiente que lanzo la bola de fuego
+     */
+    @Override
+    public void fireballCheck(Snake snake) {
+        snake.getBoard().deleteElement(getPosition());
+        snake.setPendingParts(5);
+        snake.setScore(snake.getScore()+5);
     }
 
     @Override

@@ -20,7 +20,7 @@ public class SnakeGUI extends JFrame implements ActionListener, KeyListener {
 
     private JMenuBar menuBar;
     private JMenu menu;
-    private JMenuItem nuevo, abrir, salvar, salvarComo, salir;
+    private JMenuItem nuevo, abrir, salvar, salir;
     private JLabel fondo;
     private JLabel score;
     private JPanel grillaBotones;
@@ -39,7 +39,6 @@ public class SnakeGUI extends JFrame implements ActionListener, KeyListener {
     private int players = 1;
     private String nombre1, nombre2;
     private boolean pausa;
-    private TimerTask turno;
 
     /**
      * Constructor de la interfaz en donde preparamos los elementos graficos y las acciones
@@ -67,6 +66,7 @@ public class SnakeGUI extends JFrame implements ActionListener, KeyListener {
      * metodo en donde se preparan los elementos del menu principal
      */
     private void prepareElementosPrincipal() {
+        setResizable(false);
         fondo = new JLabel();
         fondo.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("snake.jpg"))));
         fondo.setOpaque(false);
@@ -117,8 +117,6 @@ public class SnakeGUI extends JFrame implements ActionListener, KeyListener {
         menu.add(abrir);
         salvar = new JMenuItem("Salvar");
         menu.add(salvar);
-        salvarComo = new JMenuItem("Salvar Como");
-        menu.add(salvarComo);
         salir = new JMenuItem("Salir");
         menu.add(salir);
     }

@@ -85,6 +85,11 @@ public class Fireball implements Element, java.io.Serializable{
     }
 
     @Override
+    public void fireballCheck(Snake snake) {
+
+    }
+
+    @Override
     public String getName() {
         return name;
     }
@@ -132,32 +137,16 @@ public class Fireball implements Element, java.io.Serializable{
     }
 
     /**
-     * metodo que verifica que hay delante de la bola de fuego y dependiendo de esto da como resultado un comportamiento
+     * metodo que verifica que hay delante de la bola de fuego y si es un elmento ejecuta el metodo fireballCheck
      * @param inFront posicion al frente de la bola de fuego
      * @param fireball posicion de la bola de fuego
      */
     public void check(int[] inFront, int[] fireball){
         if(snake.getBoard().getElement(inFront[0],inFront[1])!= null) {
-            if(snake.getBoard().getElement(inFront[0], inFront[1]) instanceof Food){
-                snake.getBoard().deleteElement(inFront);
-                snake.getBoard().deleteElement(fireball);
-                timer.cancel();
-                timer.purge();
-            }
-            else if(snake.getBoard().getElement(inFront[0], inFront[1]) instanceof Wall){
-                snake.getBoard().deleteElement(inFront);
-                snake.setPendingParts(5);
-                snake.setScore(snake.getScore()+5);
-                snake.getBoard().deleteElement(fireball);
-                timer.cancel();
-                timer.purge();
-            }
-            else if(snake.getBoard().getElement(inFront[0], inFront[1]) instanceof SnakePart){//this only analizes if the other snake is hit
-                snake.getOtherSnake().shorten(snake.getOtherSnake().getScore()-((SnakePart) snake.getBoard().getElement(inFront[0], inFront[1])).getIndex());
-                snake.getBoard().deleteElement(fireball);
-                timer.cancel();
-                timer.purge();
-            }
+            snake.getBoard().getElement(inFront[0],inFront[1]).fireballCheck(snake);
+            snake.getBoard().deleteElement(fireball);
+            timer.cancel();
+            timer.purge();
         }
         else {
             snake.getBoard().changeElementPos(this, inFront);

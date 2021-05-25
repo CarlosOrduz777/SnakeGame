@@ -10,7 +10,7 @@ public abstract class Surprise implements Element,java.io.Serializable{
     private int y;
     private Color color = new Color(179, 0, 71);
 
-    public Surprise(int y, int x){
+    public Surprise(int x, int y){
         this.x = x;
         this.y = y;
     }
@@ -48,4 +48,8 @@ public abstract class Surprise implements Element,java.io.Serializable{
 
     public abstract void use(Snake snake);
 
+    @Override
+    public void fireballCheck(Snake snake) {
+
+    }
 }
