@@ -205,7 +205,7 @@ public class Snake implements java.io.Serializable{
      */
     public void eat(int[] to, int times){
         tail = parts.get(parts.size()-1).getPosition();
-        board.deleteElement(to);
+        board.getElement(to[0],to[1]).deleteElement(to,board);
         pendingParts += times;
     }
 
@@ -217,7 +217,7 @@ public class Snake implements java.io.Serializable{
         while (score > 0 && times >0){
             tail = parts.get(parts.size() - 1).getPosition();
             parts.remove(parts.size() - 1);
-            board.deleteElement(tail);
+            board.getElement(tail[0],tail[1]).deleteElement(tail,board);
             times--;
             score --;
         }
@@ -231,7 +231,7 @@ public class Snake implements java.io.Serializable{
      */
     private void moveParts(int[] to, int[] from){
         if (board.getElement(to[0],to[1]) != null){
-            board.deleteElement(to);
+            board.getElement(to[0],to[1]).deleteElement(to,board);
         }
         board.changeElementPos(head, to);
         to[0] = from[0];

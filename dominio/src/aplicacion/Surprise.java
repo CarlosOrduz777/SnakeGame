@@ -52,4 +52,17 @@ public abstract class Surprise implements Element,java.io.Serializable{
     public void fireballCheck(Snake snake) {
 
     }
+
+    /**
+     * Elimina una sorpresa del tablero
+     * @param pos posicion que queremos eliminar
+     * @param board tablero que queremos acceder
+     */
+    @Override
+    public void deleteElement(int[] pos, Board board) {
+        if(board.getElement(pos[0],pos[1] )!= null) {
+            board.setSurpriseOnScreen(board.getSurpriseOnScreen() - 1);
+            board.setElement(pos[0], pos[1], null);
+        }
+    }
 }

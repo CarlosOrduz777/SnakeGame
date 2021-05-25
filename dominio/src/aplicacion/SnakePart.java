@@ -97,5 +97,17 @@ public class SnakePart implements Element,java.io.Serializable {
     public int getIndex(){
         return position;
     }
+    /**
+     * Elimina una parte de la serpiente
+     * @param pos posicion que queremos eliminar
+     * @param board tablero que deseamos acceder
+     */
+    @Override
+    public void deleteElement(int[] pos, Board board) {
+        if(board.getElement(pos[0],pos[1] )!= null) {
+            board.setElement(pos[0], pos[1], null);
+        }
+    }
+
 
 }

@@ -246,7 +246,9 @@ public class Board implements java.io.Serializable{
             public void run() {
                 int[] pos = {finalY, finalX};
                 if (!isSnake(finalY,finalX)){
-                    deleteElement(pos);
+                    if(getElement(pos[0],pos[1])!= null) {
+                        getElement(pos[0], pos[1]).deleteElement(pos, Board.this);
+                    }
                 }
             }
         };
@@ -284,24 +286,11 @@ public class Board implements java.io.Serializable{
             int[] from = element.getPosition();
             elements[to[0]][to[1]] = element;
             element.setPos(to);
-            deleteElement(from);
+            element.deleteElement(from,this);
         }
         catch (ArrayIndexOutOfBoundsException ignored){}
     }
 
-    /**
-     * elimina un elemento en el tablero
-     * @param pos arreglo que contiene la posicion del elemento que se desea borrar del tablero en la forma de {y,x}
-     */
-    public void deleteElement(int[] pos){
-        if (elements[pos[0]][pos[1]] instanceof Food){
-            foodOnScreen -= 1;
-        }
-        if (elements[pos[0]][pos[1]] instanceof Surprise){
-            surpriseOnScreen -= 1;
-        }
-        elements[pos[0]][pos[1]] = null;
-    }
 
     /**
      * añade una parte de una serpiente en el tablero
@@ -416,6 +405,26 @@ public class Board implements java.io.Serializable{
 
     public Snake getSnake(int player){
         return snakes[player-1];
+    }
+
+    public int getFoodOnScreen() {
+        return foodOnScreen;
+    }
+
+    public void setFoodOnScreen(int foodOnScreen) {
+        this.foodOnScreen = foodOnScreen;
+    }
+
+    public void setSurpriseOnScreen(int surpriseOnScreen) {
+        this.surpriseOnScreen = surpriseOnScreen;
+    }
+
+    public int getSurpriseOnScreen() {
+        return surpriseOnScreen;
+    }
+
+    public void setElement(int y , int x , Element element){
+        this.elements[y][x] = element;
     }
 
 }

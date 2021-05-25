@@ -130,7 +130,7 @@ public class Fireball implements Element, java.io.Serializable{
             }
         }
         catch (ArrayIndexOutOfBoundsException ignored){
-            snake.getBoard().deleteElement(getPosition());
+            deleteElement(getPosition(), snake.getBoard());
             timer.cancel();
             timer.purge();
         }
@@ -144,7 +144,7 @@ public class Fireball implements Element, java.io.Serializable{
     public void check(int[] inFront, int[] fireball){
         if(snake.getBoard().getElement(inFront[0],inFront[1])!= null) {
             snake.getBoard().getElement(inFront[0],inFront[1]).fireballCheck(snake);
-            snake.getBoard().deleteElement(fireball);
+            deleteElement(fireball,snake.getBoard());
             timer.cancel();
             timer.purge();
         }
@@ -152,6 +152,19 @@ public class Fireball implements Element, java.io.Serializable{
             snake.getBoard().changeElementPos(this, inFront);
         }
     }
+
+    /**
+     *Elimina esta fireBall del tablero
+     * @param pos posicion de la fireBall que queremos eliminar
+     * @param board tablero al cual deseamos acceder
+     */
+    @Override
+    public void deleteElement(int[] pos, Board board) {
+        if(board.getElement(pos[0],pos[1] )!= null) {
+            board.setElement(pos[0], pos[1], null);
+        }
+    }
+
 
 
 }

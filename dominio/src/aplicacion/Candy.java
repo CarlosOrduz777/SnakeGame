@@ -61,7 +61,7 @@ public class Candy extends Fruit{
             } else {
                 snake.getOtherSnake().shorten(1);
             }
-            snake.getBoard().deleteElement(getPosition());
+            super.deleteElement(getPosition(), snake.getBoard());
         }else{
             snake.setAllowToEat(true);
             snake.eat(getPosition(), 0);

@@ -17,4 +17,5 @@ public interface Element {
     void setColor(Color color);
     void eaten(Snake snake) throws SnakeException;
     void fireballCheck(Snake snake);
+    void deleteElement(int[] pos, Board board);
 }

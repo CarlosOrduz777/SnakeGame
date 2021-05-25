@@ -183,29 +183,7 @@ public class SnakeTest {
         }
     }
 
-    @Test
-    public void shouldUseDivision(){
-        Board board = new Board(5,2);
-        Snake snake = board.getSnake(1);
-        Division division = new Division(5,3);
-        board.addElement(5,3,division);
-        RainbowFruit rf = new RainbowFruit(5,4);
-        board.addElement(5,4,rf);
-        Fruit f = new Fruit(5,5);
-        board.addElement(5,5,f);
-        board.turnTest();
-        board.turnTest();
-        board.turnTest();
-        board.turnTest();
-        snake.useSurprise();
-        board.turnTest();
-        board.turnTest();
-        assertEquals(2,snake.getScore());
-        String[][] boardS = board.readBoard();
-        for (String[] line:boardS){
-            System.out.println(Arrays.toString(line));
-        }
-    }
+
 
     @Test
     public void shouldPickFireStar(){
@@ -266,14 +244,6 @@ public class SnakeTest {
             System.out.println(Arrays.toString(line));
         }
     }
-
-
-
-
-
-
-
-
 
 
 }

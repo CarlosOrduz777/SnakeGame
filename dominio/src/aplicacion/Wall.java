@@ -57,9 +57,16 @@ public class Wall implements Element, java.io.Serializable{
      */
     @Override
     public void fireballCheck(Snake snake) {
-        snake.getBoard().deleteElement(getPosition());
+        deleteElement(getPosition(),snake.getBoard());
         snake.setPendingParts(5);
         snake.setScore(snake.getScore()+5);
+    }
+
+    @Override
+    public void deleteElement(int[] pos, Board board) {
+        if(board.getElement(pos[0],pos[1] )!= null) {
+            board.setElement(pos[0], pos[1], null);
+        }
     }
 
     @Override
