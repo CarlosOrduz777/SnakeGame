@@ -381,4 +381,5 @@ public class Snake implements java.io.Serializable{
     public boolean getAllowToEat(){
         return this.allowToEat;
     }
+
 }

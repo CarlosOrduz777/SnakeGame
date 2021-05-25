@@ -50,6 +50,16 @@ public class Board implements java.io.Serializable{
         }
     }
 
+    public Board(int y, int x){
+        this.players = 1;
+        length = 10;
+        width = 10;
+        elements = new Element[length][width];
+        snakes = new Snake[1];
+        snakes[0] = new Snake(y, x, this);
+        snakes[0].setOtherSnake(snakes[0]);
+    }
+
     /**
      * Metodo que actualiza el tablero, mueve la serpiente y genera los elementos en un turno.
      */
@@ -98,6 +108,21 @@ public class Board implements java.io.Serializable{
                 timer.schedule(turno, time * 2000);
             }
 
+        }
+    }
+
+    public void turnTest(){
+        if (players == 2) {
+            snakes[0].updateParts();
+            snakes[1].updateParts();
+            snakes[0].move();
+            snakes[1].move();
+            setScore(2);
+        }
+        else {
+            snakes[0].updateParts();
+            snakes[0].move();
+            setScore(1);
         }
     }
 
@@ -387,6 +412,10 @@ public class Board implements java.io.Serializable{
             timer.purge();
             timer = null;
         }
+    }
+
+    public Snake getSnake(int player){
+        return snakes[player-1];
     }
 
 }
