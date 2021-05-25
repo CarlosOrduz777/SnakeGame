@@ -323,6 +323,7 @@ public class SnakeGUI extends JFrame implements ActionListener, KeyListener {
                 classNotFoundException.printStackTrace();
             }
         }
+        this.players = game.getBoard().getPlayers();
 
     }
 

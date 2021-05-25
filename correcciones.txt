@@ -1,3 +1,2 @@
--Terminar las pruebas de aceptación
 -Agregar más pruebas de unidad
 -Agregar Diagramas de secuencia
