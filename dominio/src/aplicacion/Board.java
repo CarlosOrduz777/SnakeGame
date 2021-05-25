@@ -427,4 +427,7 @@ public class Board implements java.io.Serializable{
         this.elements[y][x] = element;
     }
 
+    public int getPlayers() {
+        return players;
+    }
 }
