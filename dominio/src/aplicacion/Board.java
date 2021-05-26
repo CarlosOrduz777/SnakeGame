@@ -74,7 +74,6 @@ public class Board implements java.io.Serializable{
                 generateFood();
             }
             if (surpriseOnScreen < 1){
-                surpriseOnScreen += 1;
                 Random r = new Random();
                 int time = r.nextInt(10)+1;
                 timer = new Timer();
@@ -95,7 +94,6 @@ public class Board implements java.io.Serializable{
                 generateFood();
             }
             if (surpriseOnScreen < 1){
-                surpriseOnScreen += 1;
                 Random r = new Random();
                 int time = r.nextInt(10)+1;
                 timer = new Timer();
@@ -103,6 +101,7 @@ public class Board implements java.io.Serializable{
                     @Override
                     public void run() {
                         generateSurprise();
+
                     }
                 };
                 timer.schedule(turno, time * 2000);
@@ -259,20 +258,23 @@ public class Board implements java.io.Serializable{
      * Genera una sorpresa aleatoria en el tablero,esta sorpresa puede ser Lupa, FireStar o TrapWal.
      */
     public void generateSurprise(){
-        Random r = new Random();
-        int y = r.nextInt(length);
-        int x = r.nextInt(width);
-        while (elements[y][x] != null){
-            y = r.nextInt(length);
-            x = r.nextInt(width);
-        }
-        Random r2 = new Random();
-        int opt = r2.nextInt(4);
-        switch (opt) {
-            case 0 -> elements[y][x] = new TrapWall(y, x);
-            case 1 -> elements[y][x] = new FireStar(y, x);
-            case 2 -> elements[y][x] = new Lupa(y,x);
-            default -> elements[y][x] = new Division(y, x);
+        if (surpriseOnScreen < 1) {
+            surpriseOnScreen += 1;
+            Random r = new Random();
+            int y = r.nextInt(length);
+            int x = r.nextInt(width);
+            while (elements[y][x] != null) {
+                y = r.nextInt(length);
+                x = r.nextInt(width);
+            }
+            Random r2 = new Random();
+            int opt = r2.nextInt(4);
+            switch (opt) {
+                case 0 -> elements[y][x] = new TrapWall(y, x);
+                case 1 -> elements[y][x] = new FireStar(y, x);
+                case 2 -> elements[y][x] = new Lupa(y, x);
+                default -> elements[y][x] = new Division(y, x);
+            }
         }
     }
 
@@ -427,4 +429,7 @@ public class Board implements java.io.Serializable{
         this.elements[y][x] = element;
     }
 
+    public int getPlayers() {
+        return players;
+    }
 }

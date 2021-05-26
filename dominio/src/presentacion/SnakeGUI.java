@@ -204,9 +204,11 @@ public class SnakeGUI extends JFrame implements ActionListener, KeyListener {
             close();
         } else if (e.getSource() == abrir) {
             abrirAccion();
+            jugarAccion();
         } else if (e.getSource() == salvar) {
             salvarAccion();
         } else if (e.getSource() == jugar) {
+            prepareJuegoAccion();
             jugarAccion();
         } else if (e.getSource() == menuPrincipal) {
             menuPrincipalAccion();
@@ -230,15 +232,10 @@ public class SnakeGUI extends JFrame implements ActionListener, KeyListener {
         revalidate();
     }
 
-    /**
-     * Metodo que ejecuta la accion jugar, en esta iniciamos un juego con las configuraciones realizadas y creamos
-     * el timer responsable de la ejecucion concurrente del juego y de actualizar los componentes graficos por medio
-     * de refresque
-     */
-    private void jugarAccion() {
+    private void prepareJuegoAccion(){
         String[] names = new String[2];
         pausa = false;
-        game = new Game(players);
+        game= new Game(players);
         if (players == 1) {
             nombre1 = JOptionPane.showInputDialog("Escribe tu nombre");
             names[0] = nombre1;
@@ -269,6 +266,14 @@ public class SnakeGUI extends JFrame implements ActionListener, KeyListener {
                 game.getBoard().setSnakeColor(color2, 2);
             }
         }
+    }
+
+    /**
+     * Metodo que ejecuta la accion jugar, en esta iniciamos un juego con las configuraciones realizadas y creamos
+     * el timer responsable de la ejecucion concurrente del juego y de actualizar los componentes graficos por medio
+     * de refresque
+     */
+    private void jugarAccion() {
         remove(principal);
         repaint();
         revalidate();
@@ -307,6 +312,7 @@ public class SnakeGUI extends JFrame implements ActionListener, KeyListener {
      * partida
      */
     private void abrirAccion() {
+        game = new Game(1);
         JFileChooser fileChooser = new JFileChooser();
         int opcion = fileChooser.showOpenDialog(abrir);
         if (opcion == JFileChooser.APPROVE_OPTION) {
@@ -317,6 +323,8 @@ public class SnakeGUI extends JFrame implements ActionListener, KeyListener {
                 classNotFoundException.printStackTrace();
             }
         }
+        this.players = game.getBoard().getPlayers();
+
     }
 
     /**
